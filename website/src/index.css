@@ -242,4 +242,64 @@
       transform: translateX(0);
     }
   }
+
+  /* ── Aurora — slow living color washes ── */
+  .aurora {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .aurora::before,
+  .aurora::after {
+    content: '';
+    position: absolute;
+    inset: -45%;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: 9999px;
+    filter: blur(70px);
+    will-change: transform;
+  }
+
+  .aurora::before {
+    background:
+      radial-gradient(ellipse 38% 32% at 28% 32%, var(--aurora-a, rgba(180, 83, 9, 0.16)) 0%, transparent 70%),
+      radial-gradient(ellipse 32% 28% at 72% 68%, var(--aurora-b, rgba(109, 40, 217, 0.10)) 0%, transparent 70%);
+    animation: aurora-drift-a 26s ease-in-out infinite alternate;
+  }
+
+  .aurora::after {
+    background:
+      radial-gradient(ellipse 30% 26% at 68% 28%, var(--aurora-c, rgba(20, 184, 166, 0.08)) 0%, transparent 70%),
+      radial-gradient(ellipse 34% 30% at 30% 72%, var(--aurora-a, rgba(180, 83, 9, 0.10)) 0%, transparent 70%);
+    animation: aurora-drift-b 34s ease-in-out infinite alternate;
+  }
+
+  @keyframes aurora-drift-a {
+    from { transform: translate3d(-4%, -3%, 0) rotate(0deg) scale(1); }
+    to   { transform: translate3d(5%, 4%, 0) rotate(8deg) scale(1.08); }
+  }
+
+  @keyframes aurora-drift-b {
+    from { transform: translate3d(4%, 3%, 0) rotate(0deg) scale(1.05); }
+    to   { transform: translate3d(-5%, -4%, 0) rotate(-10deg) scale(1); }
+  }
+
+  /* Reader ambient — barely-there color life behind the page */
+  .reader-ambient {
+    --aurora-a: rgba(180, 83, 9, 0.07);
+    --aurora-b: rgba(109, 40, 217, 0.05);
+    --aurora-c: rgba(20, 184, 166, 0.04);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aurora::before,
+    .aurora::after {
+      animation: none;
+    }
+    .animate-fade-up,
+    .reader-main {
+      animation: none;
+    }
+  }
 }

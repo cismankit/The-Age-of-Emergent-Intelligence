@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Quote, Heart } from 'lucide-react';
+import { EmergenceField } from '../visual/EmergenceField';
 import type { Chapter } from '../../types';
 import type { ChapterPage } from '../../lib/buildChapterPages';
 import { parts } from '../../data/parts';
@@ -21,8 +22,9 @@ export function PageView({ chapter, page }: Props) {
   switch (page.type) {
     case 'title':
       return (
-        <div className={`reader-page relative ${part?.gradient ?? 'gradient-hero'} flex flex-col justify-end text-white`}>
+        <div className={`reader-page relative overflow-hidden ${part?.gradient ?? 'gradient-hero'} flex flex-col justify-end text-white`}>
           <div className="pointer-events-none absolute inset-0 grid-dots opacity-30" />
+          <EmergenceField density={0.45} speed={0.18} linkDist={110} />
           <div className="relative">
             <p className="font-mono text-xs uppercase tracking-wider text-white/50">
               Part {String(chapter.partNumber).padStart(2, '0')} · {chapter.part}
@@ -130,8 +132,9 @@ export function PageView({ chapter, page }: Props) {
 
     case 'finale':
       return (
-        <div className="reader-page gradient-hero relative flex flex-col items-center justify-center text-center text-white">
+        <div className="reader-page gradient-hero relative flex flex-col items-center justify-center overflow-hidden text-center text-white">
           <div className="pointer-events-none absolute inset-0 grid-dots opacity-30" />
+          <EmergenceField density={0.7} speed={0.3} linkDist={140} />
           <div className="relative">
             <p className="label-caps mb-4 text-white/40">You finished the field guide</p>
             <h1 className="font-display text-3xl font-medium leading-tight md:text-4xl">

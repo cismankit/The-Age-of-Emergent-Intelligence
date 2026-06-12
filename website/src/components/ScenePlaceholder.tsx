@@ -1,4 +1,5 @@
-import { Clapperboard } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
+import { FlowScene, type ScenePalette } from './visual/FlowScene';
 
 interface Props {
   description: string;
@@ -6,13 +7,13 @@ interface Props {
   compact?: boolean;
 }
 
-const palettes = [
-  { from: '#0c1220', via: '#1a2744', to: '#2d3f6b', accent: '#60a5fa' },
-  { from: '#0a1410', via: '#0f2e24', to: '#1a4d3a', accent: '#34d399' },
-  { from: '#120a20', via: '#2d1b4e', to: '#4c2a7a', accent: '#a78bfa' },
-  { from: '#140e08', via: '#3d2810', to: '#5c3d18', accent: '#fbbf24' },
-  { from: '#140810', via: '#3d1028', to: '#5c1840', accent: '#f472b6' },
-  { from: '#081412', via: '#0f3330', to: '#1a5550', accent: '#2dd4bf' },
+const palettes: ScenePalette[] = [
+  { from: '#0c1220', via: '#1a2744', to: '#2d3f6b', accent: '#60a5fa', accentSoft: '#93c5fd' },
+  { from: '#0a1410', via: '#0f2e24', to: '#1a4d3a', accent: '#34d399', accentSoft: '#6ee7b7' },
+  { from: '#120a20', via: '#2d1b4e', to: '#4c2a7a', accent: '#a78bfa', accentSoft: '#c4b5fd' },
+  { from: '#140e08', via: '#3d2810', to: '#5c3d18', accent: '#fbbf24', accentSoft: '#fcd34d' },
+  { from: '#140810', via: '#3d1028', to: '#5c1840', accent: '#f472b6', accentSoft: '#f9a8d4' },
+  { from: '#081412', via: '#0f3330', to: '#1a5550', accent: '#2dd4bf', accentSoft: '#5eead4' },
 ];
 
 export function ScenePlaceholder({ description, chapterId, compact = false }: Props) {
@@ -22,27 +23,22 @@ export function ScenePlaceholder({ description, chapterId, compact = false }: Pr
     <figure className="group relative overflow-hidden rounded-xl border border-[var(--color-border)]">
       <div
         className={`relative ${compact ? 'aspect-[16/10] min-h-[160px]' : 'aspect-[21/9] min-h-[200px]'}`}
-        style={{
-          background: `linear-gradient(135deg, ${palette.from} 0%, ${palette.via} 50%, ${palette.to} 100%)`,
-        }}
+        style={{ background: palette.from }}
       >
-        <div className="absolute inset-0 grid-dots opacity-30" />
-        <div
-          className="absolute inset-0 opacity-20"
-          style={{
-            background: `radial-gradient(ellipse at 30% 40%, ${palette.accent}40 0%, transparent 60%)`,
-          }}
-        />
+        <FlowScene seed={chapterId} palette={palette} />
 
         {/* Cinematic letterbox bars */}
-        <div className="absolute inset-x-0 top-0 h-[6%] bg-black/50" />
-        <div className="absolute inset-x-0 bottom-0 h-[6%] bg-black/50" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-[6%] bg-black/50" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[6%] bg-black/50" />
+
+        {/* Legibility scrim behind the caption */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/65 via-black/25 to-transparent" />
 
         <div className={`absolute inset-0 flex flex-col justify-end ${compact ? 'p-4' : 'p-6 md:p-8'}`}>
           <div className="mb-2 flex items-center gap-3">
             <span className="flex items-center gap-1.5 rounded border border-white/15 bg-black/30 px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-white/70 backdrop-blur-sm">
-              <Clapperboard size={11} />
-              Scene
+              <Sparkles size={11} />
+              Living Scene
             </span>
           </div>
           <blockquote className={`max-w-2xl font-display leading-relaxed text-white/90 ${compact ? 'text-base' : 'text-lg md:text-xl'}`}>
@@ -59,9 +55,9 @@ export function ScenePlaceholder({ description, chapterId, compact = false }: Pr
       {!compact && (
         <figcaption className="flex items-center justify-between border-t border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5">
           <span className="font-mono text-[0.625rem] uppercase tracking-wider text-[var(--color-muted)]">
-            Fig. {chapterId} — Cinematic reference
+            Plate {chapterId} — generative artwork, unique to this chapter
           </span>
-          <span className="text-[0.625rem] text-[var(--color-muted)]">Fable 5 · 21:9</span>
+          <span className="text-[0.625rem] text-[var(--color-muted)]">Original · 21:9</span>
         </figcaption>
       )}
     </figure>

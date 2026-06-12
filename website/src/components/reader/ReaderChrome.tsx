@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, List, Home } from 'lucide-react';
+import { ChevronLeft, ChevronRight, List, Home, Heart } from 'lucide-react';
 import { TOTAL_BOOK_PAGES, getGlobalPageNumber, getBookPercent } from '../../lib/bookProgress';
 
 interface Props {
@@ -62,6 +62,9 @@ export function ReaderChrome({
               {chapterTitle}
             </span>
           </button>
+          <Link to="/support" className="reader-top-btn" aria-label="Support the guide">
+            <Heart size={17} />
+          </Link>
           <button onClick={onOpenContents} className="reader-top-btn" aria-label="Contents">
             <List size={18} />
           </button>

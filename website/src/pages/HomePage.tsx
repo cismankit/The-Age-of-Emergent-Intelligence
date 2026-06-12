@@ -16,6 +16,7 @@ import { chapters, getChapter } from '../data/chapters';
 import { parts } from '../data/parts';
 import { useReadingProgress } from '../hooks/useReadingProgress';
 import { getBookPercent } from '../lib/bookProgress';
+import { EmergenceField } from '../components/visual/EmergenceField';
 
 const partIcons = [BookOpen, Layers, Brain, Users, Hammer, ArrowRight];
 
@@ -35,9 +36,10 @@ export function HomePage() {
     <div>
       {/* Hero */}
       <section className="gradient-hero relative overflow-hidden px-6 pb-24 pt-16 text-white md:pb-32 md:pt-24">
-        <div className="pointer-events-none absolute inset-0 grid-dots opacity-50" />
+        <div className="pointer-events-none absolute inset-0 grid-dots opacity-40" />
         <div className="pointer-events-none absolute -right-32 -top-32 h-96 w-96 rounded-full bg-amber-500/10 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-24 -left-24 h-80 w-80 rounded-full bg-violet-500/10 blur-3xl" />
+        <EmergenceField density={0.55} speed={0.22} linkDist={130} />
 
         <div className="relative mx-auto max-w-5xl">
           <div className="animate-fade-up">
@@ -225,7 +227,7 @@ export function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="px-6 py-20">
+      <section className="aurora overflow-hidden px-6 py-20">
         <div className="mx-auto max-w-3xl text-center">
           <p className="label-caps mb-4">Begin</p>
           <h2 className="font-display text-3xl font-medium text-[var(--color-ink)]">

@@ -30,7 +30,7 @@ function CopyButton({ value }: { value: string }) {
 
 export function SupportPage() {
   return (
-    <div className="px-6 py-16">
+    <div className="aurora overflow-hidden px-6 py-16">
       <div className="mx-auto max-w-4xl">
         {/* Intro */}
         <div className="mb-14 text-center">
