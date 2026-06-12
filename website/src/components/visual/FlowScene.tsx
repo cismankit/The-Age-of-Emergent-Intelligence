@@ -141,10 +141,9 @@ export function FlowScene({ seed, palette, className = '' }: Props) {
       particles = Array.from({ length: count }, () => spawn());
       seedOrbs();
 
-      if (reduceMotion) {
-        // Paint a finished static artwork: run the field forward silently
-        for (let i = 0; i < 240; i++) stepOnce(true);
-      }
+      // Pre-develop the painting so it never appears blank on arrival
+      const warmup = reduceMotion ? 240 : 80;
+      for (let i = 0; i < warmup; i++) stepOnce(true);
     };
 
     const drawOrbs = () => {

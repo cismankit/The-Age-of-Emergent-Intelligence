@@ -558,9 +558,10 @@ function MotifCanvas({ motif, seed, palette, className = '' }: Props) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       paintBase();
       init();
-      if (reduceMotion) {
-        for (let i = 0; i < 320; i++) { frame++; step(); }
-      }
+      // Pre-develop the artwork so the plate never appears blank —
+      // the reader arrives at a scene already in motion.
+      const warmup = reduceMotion ? 320 : 90;
+      for (let i = 0; i < warmup; i++) { frame++; step(); }
     };
 
     let running = false;
