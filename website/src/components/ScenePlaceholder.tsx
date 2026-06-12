@@ -7,17 +7,29 @@ interface Props {
   chapterId: number;
   partNumber: number;
   compact?: boolean;
+  /** Fill the parent's height instead of locking an aspect ratio. */
+  fill?: boolean;
 }
 
-export function ScenePlaceholder({ description, chapterId, partNumber, compact = false }: Props) {
+export function ScenePlaceholder({ description, chapterId, partNumber, compact = false, fill = false }: Props) {
   // Fractal identity: the part sets the palette, the chapter sets the seed —
   // every plate in a part shares DNA but no two are alike.
   const palette = getPartTheme(partNumber).flow;
 
   return (
-    <figure className="group relative overflow-hidden rounded-xl border border-[var(--color-border)]">
+    <figure
+      className={`group relative overflow-hidden rounded-xl border border-[var(--color-border)] ${
+        fill ? 'flex h-full min-h-0 flex-col' : ''
+      }`}
+    >
       <div
-        className={`relative ${compact ? 'aspect-[16/10] min-h-[160px]' : 'aspect-[21/9] min-h-[200px]'}`}
+        className={`relative ${
+          fill
+            ? 'min-h-[200px] flex-1'
+            : compact
+              ? 'aspect-[16/10] min-h-[160px]'
+              : 'aspect-[21/9] min-h-[200px]'
+        }`}
         style={{ background: palette.from }}
       >
         <FlowScene seed={chapterId} palette={palette} />
@@ -47,12 +59,12 @@ export function ScenePlaceholder({ description, chapterId, partNumber, compact =
         <div className="pointer-events-none absolute bottom-4 left-4 h-4 w-4 border-b border-l border-white/20" />
         <div className="pointer-events-none absolute bottom-4 right-4 h-4 w-4 border-b border-r border-white/20" />
       </div>
-      {!compact && (
+      {(!compact || fill) && (
         <figcaption className="flex items-center justify-between border-t border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5">
           <span className="font-mono text-[0.625rem] uppercase tracking-wider text-[var(--color-muted)]">
             Plate {chapterId} — generative artwork, unique to this chapter
           </span>
-          <span className="text-[0.625rem] text-[var(--color-muted)]">Original · 21:9</span>
+          <span className="text-[0.625rem] text-[var(--color-muted)]">Original</span>
         </figcaption>
       )}
     </figure>

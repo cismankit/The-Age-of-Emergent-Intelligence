@@ -53,14 +53,22 @@ export function PageView({ chapter, page }: Props) {
 
     case 'scene':
       return (
-        <div className="reader-page flex flex-col justify-center">
-          <p className="label-caps mb-3">{chapter.story.title}</p>
-          <ScenePlaceholder
-            description={chapter.story.sceneDescription}
-            chapterId={chapter.id}
-            partNumber={chapter.partNumber}
-            compact
-          />
+        <div className="reader-page flex h-full min-h-0 flex-col">
+          <p className="label-caps mb-1.5" style={{ color: theme.flow.accent }}>
+            Scene
+          </p>
+          <h2 className="font-display mb-4 text-2xl font-medium leading-snug text-[var(--color-ink)] md:text-3xl">
+            {chapter.story.title}
+          </h2>
+          <div className="min-h-0 flex-1">
+            <ScenePlaceholder
+              description={chapter.story.sceneDescription}
+              chapterId={chapter.id}
+              partNumber={chapter.partNumber}
+              compact
+              fill
+            />
+          </div>
         </div>
       );
 

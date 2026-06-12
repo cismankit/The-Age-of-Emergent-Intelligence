@@ -161,7 +161,7 @@
   }
 
   .reader-page {
-    @apply relative mx-auto h-full min-h-0 max-w-2xl px-6 py-4;
+    @apply relative mx-auto h-full min-h-0 w-full max-w-3xl px-6 py-4;
   }
 
   .reader-top {
@@ -169,11 +169,12 @@
   }
 
   .reader-top-progress {
-    @apply absolute top-0 left-0 h-0.5 bg-[var(--color-accent)] transition-[width] duration-200;
+    @apply absolute top-0 left-0 h-0.5 transition-[width] duration-200;
+    background: var(--part-accent, var(--color-accent));
   }
 
   .reader-top-inner {
-    @apply relative mx-auto flex max-w-2xl items-center gap-2 px-3 py-2.5;
+    @apply relative mx-auto flex max-w-3xl items-center gap-2 px-3 py-2.5;
   }
 
   .reader-top-btn {

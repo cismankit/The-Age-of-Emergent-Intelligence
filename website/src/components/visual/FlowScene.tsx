@@ -68,6 +68,23 @@ export function FlowScene({ seed, palette, className = '' }: Props) {
     let t = 0;
     let particles: FlowParticle[] = [];
 
+    // Luminous orbs — slow drifting pools of light that give the scene depth
+    interface Orb { x: number; y: number; r: number; dx: number; dy: number; phase: number; bright: boolean }
+    let orbs: Orb[] = [];
+
+    const seedOrbs = () => {
+      const count = 5 + Math.floor(rand() * 4);
+      orbs = Array.from({ length: count }, () => ({
+        x: rand() * width,
+        y: rand() * height,
+        r: 18 + rand() * Math.min(width, height) * 0.16,
+        dx: (rand() - 0.5) * 0.18,
+        dy: (rand() - 0.5) * 0.14,
+        phase: rand() * Math.PI * 2,
+        bright: rand() > 0.55,
+      }));
+    };
+
     const fieldAngle = (x: number, y: number, time: number) => {
       const nx = x / width;
       const ny = y / height;
@@ -119,13 +136,49 @@ export function FlowScene({ seed, palette, className = '' }: Props) {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       paintBase();
-      const count = Math.max(80, Math.min(240, Math.round((width * height) / 3200)));
+      const count = Math.max(90, Math.min(260, Math.round((width * height) / 2900)));
       particles = Array.from({ length: count }, () => spawn());
+      seedOrbs();
 
       if (reduceMotion) {
         // Paint a finished static artwork: run the field forward silently
-        for (let i = 0; i < 220; i++) stepOnce(true);
+        for (let i = 0; i < 240; i++) stepOnce(true);
       }
+    };
+
+    const drawOrbs = () => {
+      ctx.globalCompositeOperation = 'lighter';
+      for (const o of orbs) {
+        const pulse = 0.7 + 0.3 * Math.sin(t * 0.0012 + o.phase);
+        const glow = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r * pulse);
+        glow.addColorStop(0, `${palette.accent}${o.bright ? '2e' : '1c'}`);
+        glow.addColorStop(0.55, `${palette.accent}10`);
+        glow.addColorStop(1, 'transparent');
+        ctx.fillStyle = glow;
+        ctx.beginPath();
+        ctx.arc(o.x, o.y, o.r * pulse, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Bright core — the "memory orb" itself
+        if (o.bright) {
+          const core = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, 5 + pulse * 3);
+          core.addColorStop(0, 'rgba(255,255,255,0.85)');
+          core.addColorStop(0.4, `${palette.accentSoft}99`);
+          core.addColorStop(1, 'transparent');
+          ctx.fillStyle = core;
+          ctx.beginPath();
+          ctx.arc(o.x, o.y, 5 + pulse * 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        o.x += o.dx + Math.sin(t * 0.0008 + o.phase) * 0.08;
+        o.y += o.dy + Math.cos(t * 0.0009 + o.phase) * 0.06;
+        if (o.x < -o.r) o.x = width + o.r;
+        if (o.x > width + o.r) o.x = -o.r;
+        if (o.y < -o.r) o.y = height + o.r;
+        if (o.y > height + o.r) o.y = -o.r;
+      }
+      ctx.globalCompositeOperation = 'source-over';
     };
 
     const stepOnce = (skipFade = false) => {
@@ -133,11 +186,15 @@ export function FlowScene({ seed, palette, className = '' }: Props) {
 
       if (!skipFade) {
         // Whisper-fade toward the base so trails stay luminous but alive
-        ctx.globalAlpha = 0.025;
+        ctx.globalAlpha = 0.03;
         paintBase();
         ctx.globalAlpha = 1;
       }
 
+      drawOrbs();
+
+      // Additive trails — light accumulates where currents converge
+      ctx.globalCompositeOperation = 'lighter';
       for (const p of particles) {
         const angle = fieldAngle(p.x, p.y, t);
         p.px = p.x;
@@ -147,9 +204,10 @@ export function FlowScene({ seed, palette, className = '' }: Props) {
         p.life++;
 
         const fade = Math.sin(Math.min(1, p.life / p.maxLife) * Math.PI);
-        ctx.strokeStyle = p.hueShift > 0.72 ? '#ffffff' : palette.accentSoft;
-        ctx.globalAlpha = 0.16 * fade + (p.hueShift > 0.72 ? 0.08 : 0);
-        ctx.lineWidth = p.hueShift > 0.9 ? 1.4 : 0.8;
+        const isWhite = p.hueShift > 0.78;
+        ctx.strokeStyle = isWhite ? '#ffffff' : p.hueShift > 0.4 ? palette.accentSoft : palette.accent;
+        ctx.globalAlpha = (isWhite ? 0.22 : 0.3) * fade;
+        ctx.lineWidth = p.hueShift > 0.92 ? 2 : p.hueShift > 0.6 ? 1.3 : 0.9;
         ctx.beginPath();
         ctx.moveTo(p.px, p.py);
         ctx.lineTo(p.x, p.y);
@@ -164,6 +222,7 @@ export function FlowScene({ seed, palette, className = '' }: Props) {
         }
       }
       ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
     };
 
     const loop = () => {

@@ -71,6 +71,7 @@ export function ChapterReaderPage() {
     '--aurora-a': theme.aurora.a,
     '--aurora-b': theme.aurora.b,
     '--aurora-c': theme.aurora.c,
+    '--part-accent': theme.flow.accent,
   } as CSSProperties;
 
   return (

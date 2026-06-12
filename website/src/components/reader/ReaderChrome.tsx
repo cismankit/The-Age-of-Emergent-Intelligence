@@ -55,7 +55,10 @@ export function ReaderChrome({
             <Home size={18} />
           </Link>
           <button onClick={onOpenContents} className="reader-top-center" type="button">
-            <span className="font-mono text-xs text-[var(--color-muted)]">
+            <span
+              className="font-mono text-xs"
+              style={{ color: 'var(--part-accent, var(--color-muted))' }}
+            >
               Ch. {String(chapterId).padStart(2, '0')}
             </span>
             <span className="truncate text-sm font-medium text-[var(--color-ink)]">
@@ -86,7 +89,7 @@ export function ReaderChrome({
         <div className="reader-page-indicator">
           <span className="font-mono text-xs text-[var(--color-ink)]">
             {pageIndex + 1} / {totalPages}
-            <span className="text-[var(--color-muted)]"> · {pageLabel}</span>
+            <span style={{ color: 'var(--part-accent, var(--color-muted))' }}> · {pageLabel}</span>
           </span>
           <span className="font-mono text-[0.625rem] text-[var(--color-muted)]">
             Book p. {globalPage} of {TOTAL_BOOK_PAGES} · {bookPercent}%
