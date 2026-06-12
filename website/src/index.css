@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Georgia", "Times New Roman", serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --color-ink: #0f1419;
+  --color-paper: #faf8f5;
+  --color-accent: #2563eb;
+  --color-emerald: #059669;
+  --color-amber: #d97706;
+  --color-violet: #7c3aed;
+  --color-slate: #64748b;
+  --color-card: #ffffff;
+  --color-border: #e2e8f0;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-[var(--color-paper)] text-[var(--color-ink)] antialiased;
+    font-family: var(--font-body);
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+  .gradient-hero {
+    background: linear-gradient(135deg, #0f1419 0%, #1e3a5f 50%, #2563eb 100%);
+  }
+  .gradient-part-1 { background: linear-gradient(135deg, #1e3a5f, #2563eb); }
+  .gradient-part-2 { background: linear-gradient(135deg, #065f46, #059669); }
+  .gradient-part-3 { background: linear-gradient(135deg, #5b21b6, #7c3aed); }
+  .gradient-part-4 { background: linear-gradient(135deg, #92400e, #d97706); }
+  .gradient-part-5 { background: linear-gradient(135deg, #9f1239, #e11d48); }
+  .gradient-part-6 { background: linear-gradient(135deg, #0f766e, #14b8a6); }
+}

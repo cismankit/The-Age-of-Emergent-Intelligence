@@ -1,2 +1,89 @@
-# The-Age-of-Emergent-Intelligence
-Understanding Multi-Agent AI, Autonomous Systems, and the Future of Human Collaboration
+# The Age of Emergent Intelligence
+
+**Emergence: A Visual Guide to Multi-Agent Intelligence**
+
+*How Multi-Agent AI Systems Learn, Adapt, and Create Intelligence Beyond Their Design*
+
+---
+
+> Intelligence is not something an individual possesses.
+> Intelligence is a behavior that emerges from relationships between agents, memory, tools, feedback loops, and environments.
+
+## What This Is
+
+An **illustrated field guide** — not a 250-page traditional book. A visual, interactive publication combining:
+
+- Systems thinking & emergence theory
+- Agentic AI & multi-agent architectures
+- Human-AI collaboration frameworks
+- Interactive simulations per chapter
+- Reader reflection exercises
+- Practical frameworks you can apply today
+- Fable 5 scene prompts for cinematic visuals
+
+## Read Online
+
+**[Launch the Interactive Book →](https://cismankit.github.io/The-Age-of-Emergent-Intelligence/)**
+
+## Structure
+
+| Part | Title | Chapters |
+|------|-------|----------|
+| I | The Shift | 1–3 |
+| II | Systems Behavior | 4–7 |
+| III | Agentic AI | 8–13 |
+| IV | Multi-Agent Ecosystems | 14–18 |
+| V | Human + AI | 19–22 |
+| VI | Build Your Own | 23–25 |
+
+Each chapter includes:
+- **Story** — narrative scenario with Fable 5 scene prompt
+- **System Diagram** — visual architecture
+- **Framework** — practical tool you can use immediately
+- **Reflection** — interactive exercises
+- **Simulation** — where applicable, hands-on visualization
+
+## Local Development
+
+```bash
+cd website
+npm install
+npm run dev
+```
+
+Build for production:
+
+```bash
+cd website
+npm run build
+```
+
+## Publication Tiers
+
+| Tier | Format | Status |
+|------|--------|--------|
+| 1 | PDF (50–80 pages) | Planned |
+| 2 | **Interactive Website** | **Live** |
+| 3 | YouTube Companion (25 videos) | Planned |
+| 4 | Audiobook | Planned |
+
+## Repository Layout
+
+```
+├── website/          # Interactive book (Vite + React)
+│   ├── src/
+│   │   ├── data/     # All 25 chapters
+│   │   ├── components/
+│   │   │   └── simulations/
+│   │   └── pages/
+│   └── dist/         # Production build
+└── .github/workflows/  # GitHub Pages deployment
+```
+
+## License
+
+Content and code in this repository are provided for educational purposes. See repository settings for license details.
+
+---
+
+*ProjectX · The Illustrated Field Guide to Emergent Multi-Agent Intelligence*
