@@ -58,6 +58,11 @@ function MotifCanvas({ motif, seed, palette, className = '' }: Props) {
     let raf = 0;
     let frame = 0;
 
+    // Reader's hand — every motif responds to touch, because a system
+    // you can perturb teaches more than a system you can only watch.
+    const pointer = { x: -9999, y: -9999, active: false };
+    let onTap: (x: number, y: number) => void = () => {};
+
     const paintBase = (alpha = 1) => {
       ctx.globalAlpha = alpha;
       const g = ctx.createLinearGradient(0, 0, width, height);
@@ -111,6 +116,19 @@ function MotifCanvas({ motif, seed, palette, className = '' }: Props) {
         pulses = [];
       };
 
+      onTap = (x, y) => {
+        let nearest = 0, best = Infinity;
+        nodes.forEach((n, i) => {
+          const d = Math.hypot(n.x - x, n.y - y);
+          if (d < best) { best = d; nearest = i; }
+        });
+        for (let k = 0; k < 3 && pulses.length < 10; k++) {
+          let b = Math.floor(Math.random() * nodes.length);
+          if (b === nearest) b = (b + 1) % nodes.length;
+          pulses.push({ a: nearest, b, t: 0 });
+        }
+      };
+
       step = () => {
         paintBase();
         const maxD = Math.min(width, height) * 0.32;
@@ -118,6 +136,14 @@ function MotifCanvas({ motif, seed, palette, className = '' }: Props) {
 
         for (const n of nodes) {
           n.x += n.dx; n.y += n.dy;
+          if (pointer.active) {
+            const d = Math.hypot(pointer.x - n.x, pointer.y - n.y);
+            if (d < 150 && d > 4) {
+              const f = (1 - d / 150) * 0.5;
+              n.x += ((pointer.x - n.x) / d) * f;
+              n.y += ((pointer.y - n.y) / d) * f;
+            }
+          }
           if (n.x < 0 || n.x > width) n.dx *= -1;
           if (n.y < 0 || n.y > height) n.dy *= -1;
         }
@@ -178,6 +204,17 @@ function MotifCanvas({ motif, seed, palette, className = '' }: Props) {
         });
       };
 
+      onTap = (x, y) => {
+        // Scatter burst — perturb the flock and watch it re-cohere
+        for (const b of boids) {
+          const d = Math.hypot(b.x - x, b.y - y);
+          if (d < 170 && d > 1) {
+            b.vx += ((b.x - x) / d) * 2.4;
+            b.vy += ((b.y - y) / d) * 2.4;
+          }
+        }
+      };
+
       step = () => {
         paintBase(0.16);
         ctx.globalCompositeOperation = 'lighter';
@@ -197,6 +234,15 @@ function MotifCanvas({ motif, seed, palette, className = '' }: Props) {
           if (n > 0) {
             b.vx += ((cx / n - b.x) * 0.0014) + ((ax / n - b.vx) * 0.04) + sx * 0.05;
             b.vy += ((cy / n - b.y) * 0.0014) + ((ay / n - b.vy) * 0.04) + sy * 0.05;
+          }
+          if (pointer.active) {
+            const dx = pointer.x - b.x, dy = pointer.y - b.y;
+            const d = Math.hypot(dx, dy);
+            if (d < 180 && d > 6) {
+              const f = (1 - d / 180) * 0.05;
+              b.vx += (dx / d) * f;
+              b.vy += (dy / d) * f;
+            }
           }
           const sp = Math.hypot(b.vx, b.vy) || 1;
           const cl = Math.min(1.7, Math.max(0.9, sp));
@@ -258,7 +304,21 @@ function MotifCanvas({ motif, seed, palette, className = '' }: Props) {
         if (pop < cols * rows * 0.04) reseed();
       };
 
+      onTap = (x, y) => {
+        // Stamp a glider — the reader seeds new life into the automaton
+        const cxi = Math.floor(x / cell), cyi = Math.floor(y / cell);
+        const glider = [[0, -1], [1, 0], [-1, 1], [0, 1], [1, 1]];
+        for (const [dx, dy] of glider) {
+          const gx = (cxi + dx + cols) % cols, gy = (cyi + dy + rows) % rows;
+          alive[gy * cols + gx] = 1;
+        }
+      };
+
       step = () => {
+        if (pointer.active) {
+          const i = Math.floor(pointer.y / cell) * cols + Math.floor(pointer.x / cell);
+          if (i >= 0 && i < alive.length) alive[i] = 1;
+        }
         if (frame % 16 === 0) evolve();
         paintBase();
         ctx.globalCompositeOperation = 'lighter';
@@ -303,6 +363,13 @@ function MotifCanvas({ motif, seed, palette, className = '' }: Props) {
         rings = [];
       };
 
+      onTap = (x, y) => {
+        // The reader becomes a signal source
+        const maxR = Math.min(width, height) * 0.55;
+        rings.push({ x, y, r: 2, max: maxR });
+        rings.push({ x, y, r: -14, max: maxR * 0.8 });
+      };
+
       step = () => {
         paintBase();
         ctx.globalCompositeOperation = 'lighter';
@@ -317,6 +384,7 @@ function MotifCanvas({ motif, seed, palette, className = '' }: Props) {
         rings = rings.filter((r) => r.r < r.max);
         for (const r of rings) {
           r.r += 1.1;
+          if (r.r <= 0) continue;
           const fade = 1 - r.r / r.max;
           ctx.strokeStyle = palette.accentSoft;
           ctx.globalAlpha = fade * 0.5;
@@ -356,6 +424,23 @@ function MotifCanvas({ motif, seed, palette, className = '' }: Props) {
               bright: rand() > 0.45,
             });
           }
+        });
+      };
+
+      onTap = (x, y) => {
+        // A new body joins the system on the nearest ring
+        if (bodies.length >= 20) return;
+        let ring = 0, best = Infinity;
+        ringRadii.forEach((r, i) => {
+          const d = Math.abs(Math.hypot(x - cx, y - cy) - r);
+          if (d < best) { best = d; ring = i; }
+        });
+        bodies.push({
+          ring,
+          angle: Math.atan2(y - cy, x - cx),
+          speed: (0.0035 + Math.random() * 0.003) / (1 + ring * 0.5),
+          r: 2.5 + Math.random() * 3.5,
+          bright: true,
         });
       };
 
@@ -426,6 +511,12 @@ function MotifCanvas({ motif, seed, palette, className = '' }: Props) {
         paintBase();
       };
 
+      onTap = () => {
+        // Replan: regrow the whole tree, or fast-forward a slow build
+        if (grown >= segs.length) init();
+        else grown = Math.min(segs.length, grown + Math.round(segs.length / 4));
+      };
+
       step = () => {
         ctx.globalCompositeOperation = 'lighter';
         if (grown < segs.length) {
@@ -472,20 +563,66 @@ function MotifCanvas({ motif, seed, palette, className = '' }: Props) {
       }
     };
 
+    let running = false;
     const loop = () => {
       frame++;
       step();
+      if (running) raf = requestAnimationFrame(loop);
+    };
+    const start = () => {
+      if (running || reduceMotion) return;
+      running = true;
       raf = requestAnimationFrame(loop);
+    };
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+
+    const toLocal = (e: PointerEvent) => {
+      const r = canvas.getBoundingClientRect();
+      return { x: e.clientX - r.left, y: e.clientY - r.top };
+    };
+    const onMove = (e: PointerEvent) => {
+      const p = toLocal(e);
+      pointer.x = p.x;
+      pointer.y = p.y;
+      pointer.active = true;
+    };
+    const onLeave = () => {
+      pointer.active = false;
+      pointer.x = -9999;
+      pointer.y = -9999;
+    };
+    const onDown = (e: PointerEvent) => {
+      const p = toLocal(e);
+      onTap(p.x, p.y);
     };
 
     const observer = new ResizeObserver(resize);
     observer.observe(canvas);
     resize();
-    if (!reduceMotion) raf = requestAnimationFrame(loop);
+
+    // Animate only while on screen — keeps the reader at 60fps everywhere else
+    const io = new IntersectionObserver(
+      ([entry]) => (entry.isIntersecting ? start() : stop()),
+      { rootMargin: '80px' },
+    );
+    io.observe(canvas);
+
+    if (!reduceMotion) {
+      canvas.addEventListener('pointermove', onMove);
+      canvas.addEventListener('pointerleave', onLeave);
+      canvas.addEventListener('pointerdown', onDown);
+    }
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       observer.disconnect();
+      io.disconnect();
+      canvas.removeEventListener('pointermove', onMove);
+      canvas.removeEventListener('pointerleave', onLeave);
+      canvas.removeEventListener('pointerdown', onDown);
     };
   }, [motif, seed, palette]);
 

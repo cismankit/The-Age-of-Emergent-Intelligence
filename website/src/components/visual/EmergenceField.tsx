@@ -113,6 +113,7 @@ export function EmergenceField({
       ctx.globalAlpha = 1;
     };
 
+    let running = false;
     const step = () => {
       t++;
       for (const p of particles) {
@@ -150,7 +151,16 @@ export function EmergenceField({
       }
 
       drawFrame();
+      if (running) raf = requestAnimationFrame(step);
+    };
+    const start = () => {
+      if (running || reduceMotion) return;
+      running = true;
       raf = requestAnimationFrame(step);
+    };
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(raf);
     };
 
     const onPointerMove = (e: PointerEvent) => {
@@ -167,15 +177,22 @@ export function EmergenceField({
     observer.observe(canvas);
     resize();
 
+    // Animate only while visible
+    const io = new IntersectionObserver(
+      ([entry]) => (entry.isIntersecting ? start() : stop()),
+      { rootMargin: '80px' },
+    );
+    io.observe(canvas);
+
     if (!reduceMotion) {
-      raf = requestAnimationFrame(step);
       canvas.parentElement?.addEventListener('pointermove', onPointerMove);
       canvas.parentElement?.addEventListener('pointerleave', onPointerLeave);
     }
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       observer.disconnect();
+      io.disconnect();
       canvas.parentElement?.removeEventListener('pointermove', onPointerMove);
       canvas.parentElement?.removeEventListener('pointerleave', onPointerLeave);
     };

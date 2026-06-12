@@ -67,6 +67,7 @@ export function FlowScene({ seed, palette, className = '' }: Props) {
     let raf = 0;
     let t = 0;
     let particles: FlowParticle[] = [];
+    const pointer = { x: -9999, y: -9999, active: false };
 
     // Luminous orbs — slow drifting pools of light that give the scene depth
     interface Orb { x: number; y: number; r: number; dx: number; dy: number; phase: number; bright: boolean }
@@ -196,7 +197,17 @@ export function FlowScene({ seed, palette, className = '' }: Props) {
       // Additive trails — light accumulates where currents converge
       ctx.globalCompositeOperation = 'lighter';
       for (const p of particles) {
-        const angle = fieldAngle(p.x, p.y, t);
+        let angle = fieldAngle(p.x, p.y, t);
+        // The reader's hand bends the currents
+        if (pointer.active) {
+          const dx = pointer.x - p.x, dy = pointer.y - p.y;
+          const d = Math.hypot(dx, dy);
+          if (d < 170 && d > 4) {
+            const w = (1 - d / 170) * 0.55;
+            const toward = Math.atan2(dy, dx);
+            angle = angle * (1 - w) + toward * w;
+          }
+        }
         p.px = p.x;
         p.py = p.y;
         p.x += Math.cos(angle) * p.speed;
@@ -225,20 +236,73 @@ export function FlowScene({ seed, palette, className = '' }: Props) {
       ctx.globalCompositeOperation = 'source-over';
     };
 
+    let running = false;
     const loop = () => {
       stepOnce();
+      if (running) raf = requestAnimationFrame(loop);
+    };
+    const start = () => {
+      if (running || reduceMotion) return;
+      running = true;
       raf = requestAnimationFrame(loop);
+    };
+    const stop = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+
+    const onMove = (e: PointerEvent) => {
+      const r = canvas.getBoundingClientRect();
+      pointer.x = e.clientX - r.left;
+      pointer.y = e.clientY - r.top;
+      pointer.active = true;
+    };
+    const onLeave = () => {
+      pointer.active = false;
+      pointer.x = -9999;
+      pointer.y = -9999;
+    };
+    const onDown = (e: PointerEvent) => {
+      // Burst: a cluster of fresh currents springs from the tap
+      const r = canvas.getBoundingClientRect();
+      const x = e.clientX - r.left, y = e.clientY - r.top;
+      const n = Math.min(40, particles.length);
+      for (let i = 0; i < n; i++) {
+        const p = particles[i];
+        const a = (i / n) * Math.PI * 2;
+        const d = rand() * 24;
+        p.x = x + Math.cos(a) * d;
+        p.y = y + Math.sin(a) * d;
+        p.px = p.x;
+        p.py = p.y;
+        p.life = 0;
+      }
     };
 
     const observer = new ResizeObserver(resize);
     observer.observe(canvas);
     resize();
 
-    if (!reduceMotion) raf = requestAnimationFrame(loop);
+    // Animate only while visible — saves the frame budget for the page being read
+    const io = new IntersectionObserver(
+      ([entry]) => (entry.isIntersecting ? start() : stop()),
+      { rootMargin: '80px' },
+    );
+    io.observe(canvas);
+
+    if (!reduceMotion) {
+      canvas.addEventListener('pointermove', onMove);
+      canvas.addEventListener('pointerleave', onLeave);
+      canvas.addEventListener('pointerdown', onDown);
+    }
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       observer.disconnect();
+      io.disconnect();
+      canvas.removeEventListener('pointermove', onMove);
+      canvas.removeEventListener('pointerleave', onLeave);
+      canvas.removeEventListener('pointerdown', onDown);
     };
   }, [seed, palette]);
 

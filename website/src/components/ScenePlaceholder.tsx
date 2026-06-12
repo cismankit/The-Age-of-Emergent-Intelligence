@@ -1,4 +1,4 @@
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Pointer } from 'lucide-react';
 import { ConceptScene } from './visual/ConceptScene';
 import { getPartTheme } from '../lib/partThemes';
 import { getChapterMotif, getMotifName } from '../lib/chapterMotifs';
@@ -25,7 +25,7 @@ export function ScenePlaceholder({ description, chapterId, partNumber, compact =
       }`}
     >
       <div
-        className={`relative ${
+        className={`relative cursor-crosshair ${
           fill
             ? 'min-h-[200px] flex-1'
             : compact
@@ -43,11 +43,15 @@ export function ScenePlaceholder({ description, chapterId, partNumber, compact =
         {/* Legibility scrim behind the caption */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/65 via-black/25 to-transparent" />
 
-        <div className={`absolute inset-0 flex flex-col justify-end ${compact ? 'p-4' : 'p-6 md:p-8'}`}>
-          <div className="mb-2 flex items-center gap-3">
+        <div className={`pointer-events-none absolute inset-0 flex flex-col justify-end ${compact ? 'p-4' : 'p-6 md:p-8'}`}>
+          <div className="mb-2 flex items-center gap-2">
             <span className="flex items-center gap-1.5 rounded border border-white/15 bg-black/30 px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-white/70 backdrop-blur-sm">
               <Sparkles size={11} />
               {getMotifName(motif)}
+            </span>
+            <span className="flex items-center gap-1.5 rounded border border-white/15 bg-black/30 px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-white/55 backdrop-blur-sm">
+              <Pointer size={11} />
+              Touch it — it responds
             </span>
           </div>
           <blockquote className={`max-w-2xl font-display leading-relaxed text-white/90 ${compact ? 'text-base' : 'text-lg md:text-xl'}`}>
