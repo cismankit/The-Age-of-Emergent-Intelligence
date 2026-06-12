@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type CSSProperties } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { getChapter, chapters } from '../data/chapters';
 import { buildChapterPages } from '../lib/buildChapterPages';
@@ -16,6 +16,7 @@ export function ChapterReaderPage() {
   const pageIndex = Math.max(0, Number(page) || 0);
   const chapter = getChapter(chapterId);
   const [contentsOpen, setContentsOpen] = useState(false);
+  const mainRef = useRef<HTMLElement>(null);
   const { save } = useReadingProgress();
 
   const pages = useMemo(() => (chapter ? buildChapterPages(chapter) : []), [chapter]);
@@ -28,6 +29,12 @@ export function ChapterReaderPage() {
 
   useEffect(() => {
     setContentsOpen(false);
+  }, [chapterId, pageIndex]);
+
+  // Sync scroll + paint before the browser shows the new page —
+  // prevents the URL/header updating while old content is still visible.
+  useLayoutEffect(() => {
+    mainRef.current?.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
   }, [chapterId, pageIndex]);
 
   const goToPage = (chId: number, p: number) => {
@@ -75,7 +82,7 @@ export function ChapterReaderPage() {
   } as CSSProperties;
 
   return (
-    <div className="reader-viewport aurora" style={ambient}>
+    <div className="reader-viewport aurora" style={ambient} key={`${chapterId}-${pageIndex}`}>
       <ReaderChrome
         chapterId={chapterId}
         chapterTitle={chapter.title}
@@ -89,7 +96,7 @@ export function ChapterReaderPage() {
         onOpenContents={() => setContentsOpen(true)}
       />
 
-      <main className="reader-main" key={`${chapterId}-${pageIndex}`}>
+      <main ref={mainRef} className="reader-main">
         {currentPage && (
           <PageView chapter={chapter} page={currentPage} />
         )}
