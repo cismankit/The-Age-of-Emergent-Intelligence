@@ -1,6 +1,7 @@
 import { Sparkles } from 'lucide-react';
-import { FlowScene } from './visual/FlowScene';
+import { ConceptScene } from './visual/ConceptScene';
 import { getPartTheme } from '../lib/partThemes';
+import { getChapterMotif, getMotifName } from '../lib/chapterMotifs';
 
 interface Props {
   description: string;
@@ -13,8 +14,9 @@ interface Props {
 
 export function ScenePlaceholder({ description, chapterId, partNumber, compact = false, fill = false }: Props) {
   // Fractal identity: the part sets the palette, the chapter sets the seed —
-  // every plate in a part shares DNA but no two are alike.
+  // and the chapter's *concept* picks the algorithm that paints it.
   const palette = getPartTheme(partNumber).flow;
+  const { motif, study } = getChapterMotif(chapterId);
 
   return (
     <figure
@@ -32,7 +34,7 @@ export function ScenePlaceholder({ description, chapterId, partNumber, compact =
         }`}
         style={{ background: palette.from }}
       >
-        <FlowScene seed={chapterId} palette={palette} />
+        <ConceptScene motif={motif} seed={chapterId} palette={palette} />
 
         {/* Cinematic letterbox bars */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-[6%] bg-black/50" />
@@ -45,7 +47,7 @@ export function ScenePlaceholder({ description, chapterId, partNumber, compact =
           <div className="mb-2 flex items-center gap-3">
             <span className="flex items-center gap-1.5 rounded border border-white/15 bg-black/30 px-2 py-0.5 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-white/70 backdrop-blur-sm">
               <Sparkles size={11} />
-              Living Scene
+              {getMotifName(motif)}
             </span>
           </div>
           <blockquote className={`max-w-2xl font-display leading-relaxed text-white/90 ${compact ? 'text-base' : 'text-lg md:text-xl'}`}>
@@ -62,9 +64,9 @@ export function ScenePlaceholder({ description, chapterId, partNumber, compact =
       {(!compact || fill) && (
         <figcaption className="flex items-center justify-between border-t border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-2.5">
           <span className="font-mono text-[0.625rem] uppercase tracking-wider text-[var(--color-muted)]">
-            Plate {chapterId} — generative artwork, unique to this chapter
+            Plate {chapterId} — {study}
           </span>
-          <span className="text-[0.625rem] text-[var(--color-muted)]">Original</span>
+          <span className="text-[0.625rem] text-[var(--color-muted)]">{getMotifName(motif)}</span>
         </figcaption>
       )}
     </figure>

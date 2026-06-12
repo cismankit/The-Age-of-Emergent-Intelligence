@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Quote, Heart } from 'lucide-react';
 import { EmergenceField } from '../visual/EmergenceField';
-import { FlowScene } from '../visual/FlowScene';
+import { ConceptScene } from '../visual/ConceptScene';
 import { getPartTheme } from '../../lib/partThemes';
+import { getChapterMotif } from '../../lib/chapterMotifs';
 import type { Chapter } from '../../types';
 import type { ChapterPage } from '../../lib/buildChapterPages';
 import { parts } from '../../data/parts';
@@ -93,7 +94,12 @@ export function PageView({ chapter, page }: Props) {
             className="relative flex min-h-[60%] flex-col justify-center overflow-hidden rounded-2xl p-8 text-white md:p-12"
             style={{ background: theme.flow.from }}
           >
-            <FlowScene seed={chapter.id * 31 + 7} palette={theme.flow} className="opacity-70" />
+            <ConceptScene
+              motif={getChapterMotif(chapter.id).motif}
+              seed={chapter.id * 31 + 7}
+              palette={theme.flow}
+              className="opacity-70"
+            />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-black/45 via-black/20 to-transparent" />
             <div className="relative">
               <Quote size={26} className="mb-4 text-white/30" />
