@@ -21,38 +21,54 @@ export function MemorySimulation() {
   );
 
   return (
-    <div className="rounded-xl border border-[var(--color-border)] bg-white p-6">
-      <div className="mb-4 flex flex-wrap gap-4">
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={hasMemory} onChange={(e) => setHasMemory(e.target.checked)} />
+    <div>
+      <div className="mb-5 flex flex-wrap gap-4">
+        <label className="flex items-center gap-2 text-sm text-white/70">
+          <input
+            type="checkbox"
+            checked={hasMemory}
+            onChange={(e) => setHasMemory(e.target.checked)}
+            className="accent-amber-500"
+          />
           Memory system enabled
         </label>
         {hasMemory && (
-          <label className="flex items-center gap-2 text-sm">
+          <label className="flex items-center gap-2 text-sm text-white/70">
             Retention: {retention}%
-            <input type="range" min={20} max={100} value={retention} onChange={(e) => setRetention(Number(e.target.value))} className="w-24" />
+            <input
+              type="range"
+              min={20}
+              max={100}
+              value={retention}
+              onChange={(e) => setRetention(Number(e.target.value))}
+              className="w-24 accent-amber-500"
+            />
           </label>
         )}
       </div>
-      <div className="space-y-3">
+      <div className="space-y-2">
         {sessions.map((s, i) => (
           <div
             key={i}
-            className={`flex items-center justify-between rounded-lg border p-3 ${
-              s.remembered ? 'border-emerald-300 bg-emerald-50' : 'border-red-300 bg-red-50'
+            className={`flex items-center justify-between rounded-lg border px-4 py-3 ${
+              s.remembered
+                ? 'border-emerald-500/30 bg-emerald-500/10'
+                : 'border-red-500/30 bg-red-500/10'
             }`}
           >
             <div>
-              <span className="font-mono text-xs text-[var(--color-slate)]">{s.day}</span>
-              <p className="text-sm">{s.promise}</p>
+              <span className="font-mono text-xs text-white/40">{s.day}</span>
+              <p className="text-sm text-white/80">{s.promise}</p>
             </div>
-            <span className={`text-xs font-medium ${s.remembered ? 'text-emerald-700' : 'text-red-700'}`}>
-              {s.remembered ? '✓ Remembered' : '✗ Forgotten'}
+            <span
+              className={`font-mono text-xs ${s.remembered ? 'text-emerald-400' : 'text-red-400'}`}
+            >
+              {s.remembered ? 'REMEMBERED' : 'FORGOTTEN'}
             </span>
           </div>
         ))}
       </div>
-      <p className="mt-4 text-xs text-[var(--color-slate)]">
+      <p className="mt-4 font-mono text-xs text-white/35">
         Toggle memory and adjust retention. Without memory, only the current session persists.
       </p>
     </div>

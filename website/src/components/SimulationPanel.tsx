@@ -1,4 +1,5 @@
 import type { SimulationType } from '../types';
+import { Activity } from 'lucide-react';
 import { SwarmSimulation } from './simulations/SwarmSimulation';
 import { FeedbackSimulation } from './simulations/FeedbackSimulation';
 import { BoidsSimulation } from './simulations/BoidsSimulation';
@@ -29,12 +30,19 @@ export function SimulationPanel({ type, description }: Props) {
   const Sim = components[type];
 
   return (
-    <div>
-      <h3 className="mb-2 text-sm font-semibold uppercase tracking-wider text-[var(--color-slate)]">
-        Interactive Simulation
-      </h3>
-      <p className="mb-4 text-sm text-[var(--color-slate)]">{description}</p>
-      <Sim />
+    <div className="panel-dark overflow-hidden">
+      <div className="flex items-start gap-3 border-b border-[var(--color-panel-border)] px-6 py-4">
+        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/5">
+          <Activity size={15} className="text-amber-400" />
+        </span>
+        <div>
+          <p className="label-caps text-white/40">Live Simulation</p>
+          <p className="mt-1 text-sm leading-relaxed text-white/60">{description}</p>
+        </div>
+      </div>
+      <div className="p-4 md:p-6">
+        <Sim />
+      </div>
     </div>
   );
 }
