@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Quote, Heart } from 'lucide-react';
 import { EmergenceField } from '../visual/EmergenceField';
+import { FlowScene } from '../visual/FlowScene';
+import { getPartTheme } from '../../lib/partThemes';
 import type { Chapter } from '../../types';
 import type { ChapterPage } from '../../lib/buildChapterPages';
 import { parts } from '../../data/parts';
@@ -18,13 +20,20 @@ interface Props {
 
 export function PageView({ chapter, page }: Props) {
   const part = parts.find((p) => p.number === chapter.partNumber);
+  const theme = getPartTheme(chapter.partNumber);
 
   switch (page.type) {
     case 'title':
       return (
         <div className={`reader-page relative overflow-hidden ${part?.gradient ?? 'gradient-hero'} flex flex-col justify-end text-white`}>
           <div className="pointer-events-none absolute inset-0 grid-dots opacity-30" />
-          <EmergenceField density={0.45} speed={0.18} linkDist={110} />
+          <EmergenceField
+            density={0.45}
+            speed={0.18}
+            linkDist={110}
+            colors={theme.fieldColors}
+            linkRgb={theme.linkRgb}
+          />
           <div className="relative">
             <p className="font-mono text-xs uppercase tracking-wider text-white/50">
               Part {String(chapter.partNumber).padStart(2, '0')} · {chapter.part}
@@ -44,11 +53,12 @@ export function PageView({ chapter, page }: Props) {
 
     case 'scene':
       return (
-        <div className="reader-page">
+        <div className="reader-page flex flex-col justify-center">
           <p className="label-caps mb-3">{chapter.story.title}</p>
           <ScenePlaceholder
             description={chapter.story.sceneDescription}
             chapterId={chapter.id}
+            partNumber={chapter.partNumber}
             compact
           />
         </div>
@@ -71,11 +81,24 @@ export function PageView({ chapter, page }: Props) {
     case 'insight':
       return (
         <div className="reader-page flex flex-col justify-center">
-          <Quote size={24} className="mb-4 text-[var(--color-accent)]/40" />
-          <p className="label-caps mb-4 text-[var(--color-accent)]">Key Insight</p>
-          <blockquote className="font-display text-2xl font-medium leading-snug text-[var(--color-ink)] md:text-3xl">
-            {chapter.keyInsight}
-          </blockquote>
+          <div
+            className="relative flex min-h-[60%] flex-col justify-center overflow-hidden rounded-2xl p-8 text-white md:p-12"
+            style={{ background: theme.flow.from }}
+          >
+            <FlowScene seed={chapter.id * 31 + 7} palette={theme.flow} className="opacity-70" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-black/45 via-black/20 to-transparent" />
+            <div className="relative">
+              <Quote size={26} className="mb-4 text-white/30" />
+              <p className="label-caps mb-4" style={{ color: theme.flow.accentSoft }}>
+                Key Insight
+              </p>
+              <blockquote className="font-display text-2xl font-medium leading-snug md:text-3xl">
+                {chapter.keyInsight}
+              </blockquote>
+            </div>
+            <div className="pointer-events-none absolute left-4 top-4 h-4 w-4 border-l border-t border-white/20" />
+            <div className="pointer-events-none absolute bottom-4 right-4 h-4 w-4 border-b border-r border-white/20" />
+          </div>
         </div>
       );
 
@@ -106,16 +129,26 @@ export function PageView({ chapter, page }: Props) {
 
     case 'reflection-questions':
       return (
-        <div className="reader-page">
-          <p className="label-caps mb-4">Consider</p>
-          <ReflectionQuestions questions={chapter.reflection.questions} />
+        <div className="reader-page flex flex-col justify-center">
+          <p className="label-caps mb-2" style={{ color: theme.flow.accent }}>
+            Consider
+          </p>
+          <h2 className="font-display mb-6 text-xl font-medium text-[var(--color-ink)]">
+            Sit with these before turning the page
+          </h2>
+          <ReflectionQuestions questions={chapter.reflection.questions} accent={theme.flow.accent} />
         </div>
       );
 
     case 'reflection-prompts':
       return (
-        <div className="reader-page">
-          <p className="label-caps mb-4">Your Turn</p>
+        <div className="reader-page flex flex-col justify-center">
+          <p className="label-caps mb-2" style={{ color: theme.flow.accent }}>
+            Your Turn
+          </p>
+          <h2 className="font-display mb-6 text-xl font-medium text-[var(--color-ink)]">
+            Notes save automatically on this device
+          </h2>
           <ReflectionPrompts prompts={chapter.reflection.prompts} chapterId={chapter.id} />
         </div>
       );

@@ -1,23 +1,18 @@
 import { Sparkles } from 'lucide-react';
-import { FlowScene, type ScenePalette } from './visual/FlowScene';
+import { FlowScene } from './visual/FlowScene';
+import { getPartTheme } from '../lib/partThemes';
 
 interface Props {
   description: string;
   chapterId: number;
+  partNumber: number;
   compact?: boolean;
 }
 
-const palettes: ScenePalette[] = [
-  { from: '#0c1220', via: '#1a2744', to: '#2d3f6b', accent: '#60a5fa', accentSoft: '#93c5fd' },
-  { from: '#0a1410', via: '#0f2e24', to: '#1a4d3a', accent: '#34d399', accentSoft: '#6ee7b7' },
-  { from: '#120a20', via: '#2d1b4e', to: '#4c2a7a', accent: '#a78bfa', accentSoft: '#c4b5fd' },
-  { from: '#140e08', via: '#3d2810', to: '#5c3d18', accent: '#fbbf24', accentSoft: '#fcd34d' },
-  { from: '#140810', via: '#3d1028', to: '#5c1840', accent: '#f472b6', accentSoft: '#f9a8d4' },
-  { from: '#081412', via: '#0f3330', to: '#1a5550', accent: '#2dd4bf', accentSoft: '#5eead4' },
-];
-
-export function ScenePlaceholder({ description, chapterId, compact = false }: Props) {
-  const palette = palettes[(chapterId - 1) % palettes.length];
+export function ScenePlaceholder({ description, chapterId, partNumber, compact = false }: Props) {
+  // Fractal identity: the part sets the palette, the chapter sets the seed —
+  // every plate in a part shares DNA but no two are alike.
+  const palette = getPartTheme(partNumber).flow;
 
   return (
     <figure className="group relative overflow-hidden rounded-xl border border-[var(--color-border)]">

@@ -1,26 +1,20 @@
 import { Link, Outlet } from 'react-router-dom';
-import { BookOpen } from 'lucide-react';
+import { Logo } from './Logo';
 
 export function Layout() {
   return (
     <div className="min-h-screen texture-paper">
       <header className="sticky top-0 z-50 border-b border-[var(--color-border-subtle)] bg-[var(--color-paper)]/95 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <Link
-            to="/"
-            className="group flex items-center gap-2.5 font-display text-lg font-medium tracking-tight text-[var(--color-ink)]"
-          >
-            <span className="flex h-8 w-8 items-center justify-center rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] transition group-hover:border-[var(--color-accent)]">
-              <BookOpen size={16} className="text-[var(--color-accent)]" />
-            </span>
-            Emergence
+          <Link to="/" aria-label="Emergence home">
+            <Logo size={30} withWordmark />
           </Link>
           <nav className="flex items-center gap-6 text-sm">
             <Link
-              to="/#parts"
+              to="/"
               className="hidden text-[var(--color-slate)] transition hover:text-[var(--color-ink)] sm:inline"
             >
-              Contents
+              Home
             </Link>
             <Link
               to="/support"
@@ -62,7 +56,7 @@ export function Layout() {
             <Link to="/chapter/1/p/0" className="link-subtle">
               Chapter 1
             </Link>
-            <Link to="/#parts" className="link-subtle">
+            <Link to="/" className="link-subtle">
               All Parts
             </Link>
             <Link to="/support" className="link-subtle">

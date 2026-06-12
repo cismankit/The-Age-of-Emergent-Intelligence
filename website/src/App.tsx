@@ -9,8 +9,8 @@ export default function App() {
   return (
     <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Routes>
+        <Route path="/" element={<HomePage />} />
         <Route element={<Layout />}>
-          <Route path="/" element={<HomePage />} />
           <Route path="/support" element={<SupportPage />} />
         </Route>
         <Route element={<ReaderLayout />}>

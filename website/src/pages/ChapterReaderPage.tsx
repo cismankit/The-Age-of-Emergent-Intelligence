@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { getChapter, chapters } from '../data/chapters';
 import { buildChapterPages } from '../lib/buildChapterPages';
+import { getPartTheme } from '../lib/partThemes';
 import { useReadingProgress } from '../hooks/useReadingProgress';
 import { useSwipeNavigation } from '../hooks/useSwipeNavigation';
 import { PageView } from '../components/reader/PageView';
@@ -64,8 +65,16 @@ export function ChapterReaderPage() {
   const canGoPrev = pageIndex > 0 || chapterId > 1;
   const canGoNext = pageIndex < totalPages - 1 || chapterId < 25;
 
+  // Context-aware ambience: the part's palette tints the whole reading surface.
+  const theme = getPartTheme(chapter.partNumber);
+  const ambient = {
+    '--aurora-a': theme.aurora.a,
+    '--aurora-b': theme.aurora.b,
+    '--aurora-c': theme.aurora.c,
+  } as CSSProperties;
+
   return (
-    <div className="reader-viewport">
+    <div className="reader-viewport aurora" style={ambient}>
       <ReaderChrome
         chapterId={chapterId}
         chapterTitle={chapter.title}
