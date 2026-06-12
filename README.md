@@ -19,7 +19,7 @@ An **illustrated field guide** — not a 250-page traditional book. A visual, in
 - Interactive simulations per chapter
 - Reader reflection exercises
 - Practical frameworks you can apply today
-- Fable 5 scene prompts for cinematic visuals
+- 25 baked cinematic scene illustrations (one per chapter)
 
 ## Read Online
 
@@ -37,7 +37,7 @@ An **illustrated field guide** — not a 250-page traditional book. A visual, in
 | VI | Build Your Own | 23–25 |
 
 Each chapter includes:
-- **Story** — narrative scenario with Fable 5 scene prompt
+- **Story** — narrative scenario with cinematic scene artwork
 - **System Diagram** — visual architecture
 - **Framework** — practical tool you can use immediately
 - **Reflection** — interactive exercises
@@ -62,10 +62,10 @@ npm run build
 
 | Tier | Format | Status |
 |------|--------|--------|
-| 1 | PDF (50–80 pages) | Planned |
-| 2 | **Interactive Website** | **Live** |
-| 3 | YouTube Companion (25 videos) | Planned |
-| 4 | Audiobook | Planned |
+| 1 | PDF | Print any chapter from the site |
+| 2 | **Interactive Website** | **Live** — scenes, simulations, QR demos |
+| 3 | QR Mobile Demos | **Live** — scan on every chapter |
+| 4 | Frameworks & Exercises | **Live** — 25 practical tools |
 
 ## Repository Layout
 

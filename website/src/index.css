@@ -38,3 +38,26 @@
   .gradient-part-5 { background: linear-gradient(135deg, #9f1239, #e11d48); }
   .gradient-part-6 { background: linear-gradient(135deg, #0f766e, #14b8a6); }
 }
+
+@media print {
+  header,
+  footer,
+  aside,
+  nav,
+  button,
+  #simulation {
+    display: none !important;
+  }
+  body {
+    background: white;
+    font-size: 11pt;
+  }
+  article {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  img {
+    max-height: 280px;
+    object-fit: cover;
+  }
+}
