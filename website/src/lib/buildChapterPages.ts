@@ -1,14 +1,14 @@
 import type { Chapter } from '../types';
 
+/**
+ * Legacy page types — kept for backwards compatibility.
+ * The reader now uses sections (buildChapterSections) for the scroll model.
+ */
 export type PageType =
   | 'title'
-  | 'scene'
-  | 'story'
-  | 'insight'
-  | 'diagram'
-  | 'framework'
-  | 'reflection-questions'
-  | 'reflection-prompts'
+  | 'scene-story'
+  | 'insight-diagram'
+  | 'framework-reflect'
   | 'simulation'
   | 'finale';
 
@@ -18,61 +18,64 @@ export interface ChapterPage {
   paragraphs?: string[];
 }
 
-function chunkText(text: string, maxChars = 520): string[] {
-  if (text.length <= maxChars) return [text];
+/** Section IDs for the scroll-based reader. */
+export type SectionId = 'opening' | 'system' | 'framework' | 'lab' | 'finale';
 
-  const sentences = text.match(/[^.!?]+[.!?]+(?:\s|$)|[^.!?]+$/g) ?? [text];
-  const chunks: string[] = [];
-  let current = '';
-
-  for (const sentence of sentences) {
-    const trimmed = sentence.trim();
-    if (!trimmed) continue;
-
-    if (current.length + trimmed.length + 1 > maxChars && current.length > 0) {
-      chunks.push(current.trim());
-      current = trimmed;
-    } else {
-      current = current ? `${current} ${trimmed}` : trimmed;
-    }
-  }
-
-  if (current.trim()) chunks.push(current.trim());
-  return chunks;
+export interface ChapterSection {
+  id: SectionId;
+  /** Short label for the sticky nav tab */
+  navLabel: string;
+  /** Longer label for progress / aria */
+  label: string;
+  sectionIndex: number;
 }
 
-function chunkParagraphs(paragraphs: string[], maxChars = 520): string[] {
-  return paragraphs.flatMap((para) => chunkText(para, maxChars));
-}
-
-export function buildChapterPages(chapter: Chapter): ChapterPage[] {
-  const pages: ChapterPage[] = [
-    { type: 'title', label: 'Opening' },
-    { type: 'scene', label: 'Scene' },
+/**
+ * Build the ordered section list for a chapter.
+ *
+ * Section → content mapping:
+ *   opening  = hero title + scene + narrative story
+ *   system   = key insight card + system diagram
+ *   framework= practical framework + reflection questions + exercises
+ *   lab      = interactive simulation (only if chapter has one)
+ *   finale   = closing page (chapter 25 only)
+ */
+export function buildChapterSections(chapter: Chapter): ChapterSection[] {
+  const sections: ChapterSection[] = [
+    { id: 'opening', navLabel: 'Story', label: 'Opening & Story', sectionIndex: 0 },
+    { id: 'system', navLabel: 'System', label: 'Architecture', sectionIndex: 1 },
+    { id: 'framework', navLabel: 'Framework', label: 'Framework & Reflection', sectionIndex: 2 },
   ];
 
-  const storyTexts = chunkParagraphs(
-    chapter.story.narrative.split('\n\n').filter(Boolean),
-  );
-
-  storyTexts.forEach((text, i) => {
-    pages.push({
-      type: 'story',
-      label: storyTexts.length > 1 ? `Story ${i + 1}` : 'Story',
-      paragraphs: [text],
-    });
-  });
-
-  pages.push(
-    { type: 'insight', label: 'Insight' },
-    { type: 'diagram', label: 'Architecture' },
-    { type: 'framework', label: 'Framework' },
-    { type: 'reflection-questions', label: 'Reflect' },
-  );
-
-  if (chapter.reflection.prompts.length > 0) {
-    pages.push({ type: 'reflection-prompts', label: 'Exercises' });
+  if (chapter.simulation) {
+    sections.push({ id: 'lab', navLabel: 'Lab', label: 'Simulation Lab', sectionIndex: sections.length });
   }
+
+  if (chapter.id === 25) {
+    sections.push({ id: 'finale', navLabel: 'Finale', label: 'The End', sectionIndex: sections.length });
+  }
+
+  return sections;
+}
+
+// ─── Legacy function (still used by bookProgress etc.) ─────────────────────
+
+export function buildChapterPages(chapter: Chapter): ChapterPage[] {
+  const narrativeParagraphs = chapter.story.narrative
+    .split('\n\n')
+    .map((p) => p.trim())
+    .filter(Boolean);
+
+  const pages: ChapterPage[] = [
+    { type: 'title', label: 'Opening' },
+    {
+      type: 'scene-story',
+      label: 'Story',
+      paragraphs: narrativeParagraphs,
+    },
+    { type: 'insight-diagram', label: 'Architecture' },
+    { type: 'framework-reflect', label: 'Framework' },
+  ];
 
   if (chapter.simulation) {
     pages.push({ type: 'simulation', label: 'Simulation' });

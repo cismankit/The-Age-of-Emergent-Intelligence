@@ -1,55 +1,44 @@
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, List, Home, Heart } from 'lucide-react';
-import { TOTAL_BOOK_PAGES, getGlobalPageNumber, getBookPercent } from '../../lib/bookProgress';
 
 interface Props {
   chapterId: number;
   chapterTitle: string;
-  pageIndex: number;
-  totalPages: number;
-  pageLabel: string;
+  activeSectionIndex: number;
+  totalSections: number;
+  sectionLabel: string;
   canGoPrev: boolean;
   canGoNext: boolean;
-  onPrev: () => void;
-  onNext: () => void;
+  onPrevChapter: () => void;
+  onNextChapter: () => void;
   onOpenContents: () => void;
+  sidebarOpen: boolean;
+  onToggleSidebar: () => void;
 }
 
 export function ReaderChrome({
   chapterId,
   chapterTitle,
-  pageIndex,
-  totalPages,
-  pageLabel,
+  activeSectionIndex,
+  totalSections,
+  sectionLabel,
   canGoPrev,
   canGoNext,
-  onPrev,
-  onNext,
+  onPrevChapter,
+  onNextChapter,
   onOpenContents,
 }: Props) {
-  const globalPage = getGlobalPageNumber(chapterId, pageIndex);
-  const bookPercent = getBookPercent(chapterId, pageIndex);
-  const progress = (globalPage / TOTAL_BOOK_PAGES) * 100;
+  // Chapter progress: how far through the 25 chapters are we (rough %)
+  const chapterPercent = Math.round(((chapterId - 1) / 25) * 100);
 
   return (
     <>
-      {/* Tap zones — like turning pages */}
-      <button
-        className="reader-tap-zone reader-tap-left"
-        onClick={onPrev}
-        disabled={!canGoPrev}
-        aria-label="Previous page"
-      />
-      <button
-        className="reader-tap-zone reader-tap-right"
-        onClick={onNext}
-        disabled={!canGoNext}
-        aria-label="Next page"
-      />
-
       {/* Top bar */}
       <header className="reader-top">
-        <div className="reader-top-progress" style={{ width: `${progress}%` }} />
+        <div
+          className="reader-top-progress"
+          style={{ width: `${chapterPercent + (activeSectionIndex / Math.max(1, totalSections - 1)) * (100 / 25)}%` }}
+        />
         <div className="reader-top-inner">
           <Link to="/" className="reader-top-btn" aria-label="Home">
             <Home size={18} />
@@ -74,35 +63,51 @@ export function ReaderChrome({
         </div>
       </header>
 
-      {/* Bottom bar */}
+      {/* Bottom bar — chapter navigation only */}
       <footer className="reader-bottom">
         <button
-          onClick={onPrev}
+          onClick={onPrevChapter}
           disabled={!canGoPrev}
           className="reader-nav-btn"
-          aria-label="Previous page"
+          aria-label="Previous chapter"
         >
           <ChevronLeft size={20} />
-          <span className="hidden sm:inline">Back</span>
+          <span className="hidden sm:inline text-xs">Ch. {String(chapterId - 1).padStart(2, '0')}</span>
         </button>
 
-        <div className="reader-page-indicator">
-          <span className="font-mono text-xs text-[var(--color-ink)]">
-            {pageIndex + 1} / {totalPages}
-            <span style={{ color: 'var(--part-accent, var(--color-muted))' }}> · {pageLabel}</span>
+        {/* Section progress dots */}
+        <div
+          className="reader-section-dots"
+          role="status"
+          aria-label={`${sectionLabel} — section ${activeSectionIndex + 1} of ${totalSections}`}
+        >
+          <span className="font-mono text-xs text-[var(--color-muted)] hidden sm:inline">
+            {sectionLabel}
           </span>
-          <span className="font-mono text-[0.625rem] text-[var(--color-muted)]">
-            Book p. {globalPage} of {TOTAL_BOOK_PAGES} · {bookPercent}%
+          <div className="flex items-center gap-1.5">
+            {Array.from({ length: totalSections }).map((_, i) => (
+              <span
+                key={i}
+                className={`rounded-full transition-all duration-300 ${
+                  i === activeSectionIndex
+                    ? 'h-2 w-5 bg-[var(--part-accent,var(--color-accent))]'
+                    : 'h-1.5 w-1.5 bg-[var(--color-border)]'
+                }`}
+              />
+            ))}
+          </div>
+          <span className="font-mono text-[0.625rem] text-[var(--color-muted)] sm:hidden">
+            {sectionLabel}
           </span>
         </div>
 
         <button
-          onClick={onNext}
+          onClick={onNextChapter}
           disabled={!canGoNext}
           className="reader-nav-btn reader-nav-btn-primary"
-          aria-label="Next page"
+          aria-label="Next chapter"
         >
-          <span className="hidden sm:inline">Next</span>
+          <span className="hidden sm:inline text-xs">Ch. {String(chapterId + 1).padStart(2, '0')}</span>
           <ChevronRight size={20} />
         </button>
       </footer>

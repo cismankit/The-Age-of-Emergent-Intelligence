@@ -153,6 +153,7 @@
     @apply relative flex h-[100dvh] flex-col overflow-hidden;
   }
 
+  /* Legacy single-page class — kept for any remaining PageView usage */
   .reader-main {
     @apply relative flex-1 overflow-y-auto overflow-x-hidden overscroll-none;
     padding-top: 3.25rem;
@@ -162,6 +163,176 @@
 
   .reader-page {
     @apply relative mx-auto h-full min-h-0 w-full max-w-3xl px-6 py-4;
+  }
+
+  /* ── Scroll reader (new architecture) ── */
+
+  /* Body layout: scroll main + optional sidebar */
+  .reader-body {
+    @apply relative flex flex-1 overflow-hidden;
+    padding-top: 3.25rem;
+    padding-bottom: 4.5rem;
+  }
+
+  /* Sticky section nav — inside scroll container */
+  .reader-section-nav {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    border-bottom: 1px solid var(--color-border-subtle);
+    background: color-mix(in srgb, var(--color-paper) 95%, transparent);
+    backdrop-filter: blur(12px);
+  }
+
+  .reader-section-nav-inner {
+    @apply mx-auto flex px-3;
+    width: 100%;
+  }
+
+  @media (min-width: 768px) {
+    .reader-section-nav-inner,
+    .reader-scroll-content {
+      width: 70%;
+      max-width: 56rem;
+    }
+  }
+
+  .reader-section-tab {
+    padding: 0.5rem 0.875rem;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--color-muted);
+    border-bottom: 2px solid transparent;
+    transition: color 0.18s, border-color 0.18s;
+    cursor: pointer;
+    background: transparent;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    white-space: nowrap;
+  }
+
+  .reader-section-tab:hover {
+    color: var(--color-ink);
+  }
+
+  .reader-section-tab.active {
+    color: var(--color-ink);
+    border-bottom-color: var(--part-accent, var(--color-accent));
+    font-weight: 600;
+  }
+
+  /* Main scrollable content area */
+  .reader-scroll-main {
+    @apply flex-1 overflow-y-auto overflow-x-hidden overscroll-none;
+  }
+
+  /* Section content */
+  .reader-scroll-content {
+    @apply w-full;
+    animation: page-in 0.28s ease-out;
+  }
+
+  /* Chapter hero (opening section top) */
+  .reader-ch-hero {
+    min-height: 280px;
+    padding: 3rem 0 2.5rem;
+  }
+
+  /* Opening section wrapper */
+  .reader-ch-opening {
+    @apply w-full;
+  }
+
+  /* Standard section content block */
+  .reader-ch-section {
+    @apply mx-auto w-full px-6 py-10;
+  }
+
+  [data-section] {
+    scroll-margin-top: 2.75rem;
+  }
+
+  /* Divider between sections */
+  .reader-ch-divider {
+    @apply border-t border-[var(--color-border-subtle)];
+  }
+
+  /* Finale section */
+  .reader-ch-finale {
+    padding: 4rem 0;
+  }
+
+  /* Section progress dots in bottom bar */
+  .reader-section-dots {
+    @apply flex flex-col items-center gap-1.5;
+  }
+
+  /* ── Desktop sidebar ── */
+  .reader-sidebar {
+    display: none;
+    flex-direction: column;
+    overflow-y: auto;
+    width: 0;
+    transition: width 0.2s ease;
+    border-left: 1px solid var(--color-border-subtle);
+    background: var(--color-paper);
+  }
+
+  .reader-sidebar.is-open {
+    width: 280px;
+    display: flex;
+  }
+
+  .reader-sidebar-inner {
+    @apply flex-1 px-4 py-5 overflow-y-auto;
+    /* Push below section nav height (~37px) */
+    padding-top: calc(37px + 1.25rem);
+  }
+
+  .reader-sidebar-toggle {
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .reader-sidebar {
+      display: flex;
+    }
+
+    .reader-sidebar.is-open {
+      width: 280px;
+    }
+
+    .reader-sidebar-toggle {
+      display: flex;
+      position: fixed;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 45;
+      width: 22px;
+      height: 48px;
+      align-items: center;
+      justify-content: center;
+      background: var(--color-paper);
+      border: 1px solid var(--color-border-subtle);
+      border-right: none;
+      border-radius: 6px 0 0 6px;
+      color: var(--color-muted);
+      cursor: pointer;
+      transition: color 0.15s, background 0.15s, right 0.2s;
+    }
+
+    .reader-sidebar-toggle:hover {
+      color: var(--color-ink);
+      background: var(--color-border-subtle);
+    }
+
+    .reader-body.sidebar-open .reader-sidebar-toggle {
+      right: 280px;
+    }
   }
 
   .reader-top {
@@ -186,8 +357,8 @@
   }
 
   .reader-bottom {
-    @apply fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between gap-3 border-t border-[var(--color-border-subtle)] bg-[var(--color-paper)]/95 px-4 py-3 backdrop-blur-md;
-    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+    @apply fixed bottom-0 left-0 right-0 z-50 flex items-center justify-between gap-3 border-t border-[var(--color-border-subtle)] bg-[var(--color-paper)]/95 px-4 py-2.5 backdrop-blur-md;
+    padding-bottom: max(0.625rem, env(safe-area-inset-bottom));
   }
 
   .reader-nav-btn {
@@ -218,7 +389,7 @@
     @apply fixed z-40 border-0 bg-transparent;
     top: 3.25rem;
     bottom: 4.5rem;
-    width: 22%;
+    width: 13%;
   }
 
   .reader-tap-left {

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Quote, Heart } from 'lucide-react';
+import { Quote, Heart, CheckCircle2 } from 'lucide-react';
 import { EmergenceField } from '../visual/EmergenceField';
 import { ConceptScene } from '../visual/ConceptScene';
 import { getPartTheme } from '../../lib/partThemes';
@@ -17,9 +17,31 @@ import { SimulationPanel } from '../SimulationPanel';
 interface Props {
   chapter: Chapter;
   page: ChapterPage;
+  isLastPage?: boolean;
 }
 
-export function PageView({ chapter, page }: Props) {
+function ChapterCompleteChip({ chapterId, theme }: { chapterId: number; theme: ReturnType<typeof getPartTheme> }) {
+  const nextId = chapterId + 1;
+  return (
+    <div
+      className="mt-6 flex items-center gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3"
+      role="status"
+      aria-label={`Chapter ${chapterId} complete`}
+    >
+      <CheckCircle2 size={18} style={{ color: theme.flow.accent }} className="shrink-0" />
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-[var(--color-ink)]">
+          Chapter {String(chapterId).padStart(2, '0')} complete
+        </p>
+        <p className="text-xs text-[var(--color-muted)]">
+          Swipe or press → to start Chapter {String(nextId).padStart(2, '0')}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+export function PageView({ chapter, page, isLastPage = false }: Props) {
   const part = parts.find((p) => p.number === chapter.partNumber);
   const theme = getPartTheme(chapter.partNumber);
 
@@ -52,16 +74,17 @@ export function PageView({ chapter, page }: Props) {
         </div>
       );
 
-    case 'scene':
+    case 'scene-story':
       return (
-        <div className="reader-page flex h-full min-h-0 flex-col">
+        <div className="reader-page">
+          {/* Scene */}
           <p className="label-caps mb-1.5" style={{ color: theme.flow.accent }}>
             Scene
           </p>
-          <h2 className="font-display mb-4 text-2xl font-medium leading-snug text-[var(--color-ink)] md:text-3xl">
+          <h2 className="font-display mb-3 text-2xl font-medium leading-snug text-[var(--color-ink)] md:text-3xl">
             {chapter.story.title}
           </h2>
-          <div className="min-h-0 flex-1">
+          <div className="mb-6 h-44 overflow-hidden rounded-xl">
             <ScenePlaceholder
               description={chapter.story.sceneDescription}
               chapterId={chapter.id}
@@ -70,16 +93,12 @@ export function PageView({ chapter, page }: Props) {
               fill
             />
           </div>
-        </div>
-      );
 
-    case 'story':
-      return (
-        <div className="reader-page">
+          {/* Narrative */}
           <p className="label-caps mb-4">Scenario</p>
           <div className="prose-narrative">
             {page.paragraphs?.map((para, i) => (
-              <p key={i} className={page.label === 'Story' && i === 0 ? 'first-para' : ''}>
+              <p key={i} className={i === 0 ? 'first-para' : ''}>
                 {para}
               </p>
             ))}
@@ -87,11 +106,12 @@ export function PageView({ chapter, page }: Props) {
         </div>
       );
 
-    case 'insight':
+    case 'insight-diagram':
       return (
-        <div className="reader-page flex flex-col justify-center">
+        <div className="reader-page">
+          {/* Key Insight */}
           <div
-            className="relative flex min-h-[60%] flex-col justify-center overflow-hidden rounded-2xl p-8 text-white md:p-12"
+            className="relative mb-6 overflow-hidden rounded-2xl p-6 text-white md:p-8"
             style={{ background: theme.flow.from }}
           >
             <ConceptScene
@@ -102,23 +122,19 @@ export function PageView({ chapter, page }: Props) {
             />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-black/45 via-black/20 to-transparent" />
             <div className="relative">
-              <Quote size={26} className="mb-4 text-white/30" />
-              <p className="label-caps mb-4" style={{ color: theme.flow.accentSoft }}>
+              <Quote size={22} className="mb-3 text-white/30" />
+              <p className="label-caps mb-3" style={{ color: theme.flow.accentSoft }}>
                 Key Insight
               </p>
-              <blockquote className="font-display text-2xl font-medium leading-snug md:text-3xl">
+              <blockquote className="font-display text-xl font-medium leading-snug md:text-2xl">
                 {chapter.keyInsight}
               </blockquote>
             </div>
             <div className="pointer-events-none absolute left-4 top-4 h-4 w-4 border-l border-t border-white/20" />
             <div className="pointer-events-none absolute bottom-4 right-4 h-4 w-4 border-b border-r border-white/20" />
           </div>
-        </div>
-      );
 
-    case 'diagram':
-      return (
-        <div className="reader-page">
+          {/* System Diagram */}
           <p className="label-caps mb-4">System Architecture</p>
           <SystemDiagram
             nodes={chapter.systemDiagram.nodes}
@@ -128,9 +144,10 @@ export function PageView({ chapter, page }: Props) {
         </div>
       );
 
-    case 'framework':
+    case 'framework-reflect':
       return (
         <div className="reader-page">
+          {/* Framework */}
           <p className="label-caps mb-4">Practical Framework</p>
           <FrameworkCard
             name={chapter.framework.name}
@@ -138,32 +155,35 @@ export function PageView({ chapter, page }: Props) {
             application={chapter.framework.application}
             compact
           />
-        </div>
-      );
 
-    case 'reflection-questions':
-      return (
-        <div className="reader-page flex flex-col justify-center">
-          <p className="label-caps mb-2" style={{ color: theme.flow.accent }}>
-            Consider
-          </p>
-          <h2 className="font-display mb-6 text-xl font-medium text-[var(--color-ink)]">
-            Sit with these before turning the page
-          </h2>
-          <ReflectionQuestions questions={chapter.reflection.questions} accent={theme.flow.accent} />
-        </div>
-      );
+          {/* Reflection Questions */}
+          <div className="mt-6">
+            <p className="label-caps mb-2" style={{ color: theme.flow.accent }}>
+              Consider
+            </p>
+            <p className="font-display mb-4 text-base font-medium text-[var(--color-ink)]">
+              Sit with these — jot a note, it saves automatically
+            </p>
+            <ReflectionQuestions
+              questions={chapter.reflection.questions}
+              accent={theme.flow.accent}
+              chapterId={chapter.id}
+            />
+          </div>
 
-    case 'reflection-prompts':
-      return (
-        <div className="reader-page flex flex-col justify-center">
-          <p className="label-caps mb-2" style={{ color: theme.flow.accent }}>
-            Your Turn
-          </p>
-          <h2 className="font-display mb-6 text-xl font-medium text-[var(--color-ink)]">
-            Notes save automatically on this device
-          </h2>
-          <ReflectionPrompts prompts={chapter.reflection.prompts} chapterId={chapter.id} />
+          {/* Exercises */}
+          {chapter.reflection.prompts.length > 0 && (
+            <div className="mt-6">
+              <p className="label-caps mb-2" style={{ color: theme.flow.accent }}>
+                Your Turn
+              </p>
+              <ReflectionPrompts prompts={chapter.reflection.prompts} chapterId={chapter.id} />
+            </div>
+          )}
+
+          {isLastPage && chapter.id < 25 && (
+            <ChapterCompleteChip chapterId={chapter.id} theme={theme} />
+          )}
         </div>
       );
 
@@ -174,6 +194,9 @@ export function PageView({ chapter, page }: Props) {
             type={chapter.simulation.type}
             description={chapter.simulation.description}
           />
+          {isLastPage && chapter.id < 25 && (
+            <ChapterCompleteChip chapterId={chapter.id} theme={theme} />
+          )}
         </div>
       ) : null;
 

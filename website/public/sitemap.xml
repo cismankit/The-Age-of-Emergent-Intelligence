@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://robotbod.ai/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://robotbod.ai/about</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://robotbod.ai/support</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://robotbod.ai/kits/experience</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://robotbod.ai/kits/exo-bot</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- Part I: The Shift -->
+  <url><loc>https://robotbod.ai/chapter/1</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://robotbod.ai/chapter/2</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/3</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/4</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <!-- Part II: How Systems Think -->
+  <url><loc>https://robotbod.ai/chapter/5</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/6</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/7</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/8</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/9</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <!-- Part III: Agent Cognition -->
+  <url><loc>https://robotbod.ai/chapter/10</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/11</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/12</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/13</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/14</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <!-- Part IV: Coordination & Society -->
+  <url><loc>https://robotbod.ai/chapter/15</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/16</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/17</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/18</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <!-- Part V: Human + Machine -->
+  <url><loc>https://robotbod.ai/chapter/19</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/20</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/21</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/22</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <!-- Part VI: The Emerging World -->
+  <url><loc>https://robotbod.ai/chapter/23</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/24</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://robotbod.ai/chapter/25</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+</urlset>

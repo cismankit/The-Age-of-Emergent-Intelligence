@@ -17,6 +17,12 @@ export function Layout() {
               Home
             </Link>
             <Link
+              to="/about"
+              className="hidden text-[var(--color-slate)] transition hover:text-[var(--color-ink)] sm:inline"
+            >
+              About
+            </Link>
+            <Link
               to="/support"
               className="hidden text-[var(--color-slate)] transition hover:text-[var(--color-accent)] sm:inline"
             >
@@ -58,6 +64,9 @@ export function Layout() {
             </Link>
             <Link to="/" className="link-subtle">
               All Parts
+            </Link>
+            <Link to="/about" className="link-subtle">
+              About
             </Link>
             <Link to="/support" className="link-subtle">
               Support

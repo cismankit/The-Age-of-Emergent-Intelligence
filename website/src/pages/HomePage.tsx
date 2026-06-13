@@ -16,15 +16,23 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Sparkles,
+  UserCircle,
 } from 'lucide-react';
 import { chapters, getChapter } from '../data/chapters';
 import { parts } from '../data/parts';
 import { useReadingProgress } from '../hooks/useReadingProgress';
-import { TOTAL_BOOK_PAGES, getBookPercent } from '../lib/bookProgress';
+import { getBookPercent } from '../lib/bookProgress';
 import { getPartTheme } from '../lib/partThemes';
 import { EmergenceField } from '../components/visual/EmergenceField';
 import { FlowScene } from '../components/visual/FlowScene';
 import { Logo } from '../components/Logo';
+import { EmergenceBlueprint } from '../components/EmergenceBlueprint';
+
+const KIT_LINKS = {
+  experienceKit: '/kits/experience',
+  exoBotKit: '/kits/exo-bot',
+};
 
 const partIcons = [BookOpen, Layers, Brain, Users, Hammer, ArrowRight];
 
@@ -36,7 +44,7 @@ const chapterElements = [
   { icon: PenLine, label: 'Reflection', desc: 'Turn the idea into your own practice' },
 ];
 
-const SECTIONS = ['Emergence', 'Inside', 'Why', 'Contents', 'Begin'];
+const SECTIONS = ['Emergence', 'Inside', 'Why', 'Contents', 'Blueprint', 'Begin'];
 
 export function HomePage() {
   const { progress } = useReadingProgress();
@@ -100,6 +108,9 @@ export function HomePage() {
         <button onClick={() => scrollToSection(3)} className="glass-nav-link hidden sm:block">
           Contents
         </button>
+        <Link to="/about" className="glass-nav-link hidden sm:block">
+          About
+        </Link>
         <Link to="/support" className="glass-nav-link hidden sm:block">
           Support
         </Link>
@@ -131,13 +142,21 @@ export function HomePage() {
         <EmergenceField density={0.6} speed={0.24} linkDist={130} />
 
         <div className="relative mx-auto w-full max-w-5xl px-6 pt-16">
-          <p data-reveal className="label-caps mb-5 text-white/40">
-            An Illustrated Field Guide to Multi-Agent AI
-          </p>
+          {/* Identity badge — answers "what is this?" in one line */}
+          <div
+            data-reveal
+            className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-4 py-1.5"
+          >
+            <span className="font-mono text-[0.625rem] uppercase tracking-wider text-amber-400/90">Free</span>
+            <span className="h-3 w-px bg-white/20" />
+            <span className="font-mono text-[0.625rem] uppercase tracking-wider text-white/60">
+              Visual Field Guide · Multi-Agent AI · 25 Chapters
+            </span>
+          </div>
           <h1
             data-reveal
             style={{ '--reveal-delay': '0.08s' } as React.CSSProperties}
-            className="font-display max-w-3xl text-[clamp(3rem,9vw,6rem)] font-medium leading-[1.02] tracking-tight"
+            className="font-display max-w-3xl text-[clamp(2.5rem,8vw,5.5rem)] font-medium leading-[1.04] tracking-tight"
           >
             Intelligence is a<br />
             <span className="text-amber-400">relationship,</span> not a thing.
@@ -147,9 +166,9 @@ export function HomePage() {
             style={{ '--reveal-delay': '0.16s' } as React.CSSProperties}
             className="mt-6 max-w-xl text-lg leading-relaxed text-white/70 md:text-xl"
           >
-            <em>Emergence</em> shows how AI agents — none of them brilliant alone — combine into
-            systems that learn, adapt, and outthink their own design. Read it like a book.
-            Play it like a lab.
+            <em>Emergence</em> is a free visual field guide for builders, students, and founders
+            learning to conduct many AI agents — not just prompt one. 25 chapters, live
+            simulations, practical frameworks.
           </p>
 
           <div
@@ -189,9 +208,9 @@ export function HomePage() {
           >
             {[
               { value: '25', label: 'Chapters' },
-              { value: String(TOTAL_BOOK_PAGES), label: 'Pages' },
-              { value: '12', label: 'Simulations' },
+              { value: '25', label: 'Simulations' },
               { value: '6', label: 'Parts' },
+              { value: 'Free', label: 'Always' },
             ].map((stat) => (
               <div key={stat.label}>
                 <dt className="font-display text-2xl font-medium text-white md:text-4xl">
@@ -203,6 +222,28 @@ export function HomePage() {
               </div>
             ))}
           </dl>
+
+          {/* Kit teasers */}
+          <div
+            data-reveal
+            style={{ '--reveal-delay': '0.42s' } as React.CSSProperties}
+            className="mt-8 flex flex-wrap gap-3"
+          >
+            <Link
+              to={KIT_LINKS.experienceKit}
+              className="inline-flex items-center gap-2 rounded-full border border-amber-400/25 bg-amber-400/8 px-4 py-2 text-xs font-medium text-amber-300/80 transition hover:border-amber-400/45 hover:text-amber-300"
+            >
+              <Sparkles size={12} />
+              Experience Kit — coming soon
+            </Link>
+            <Link
+              to={KIT_LINKS.exoBotKit}
+              className="inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-400/8 px-4 py-2 text-xs font-medium text-violet-300/80 transition hover:border-violet-400/45 hover:text-violet-300"
+            >
+              <Hammer size={12} />
+              Exo Bot Kit — coming soon
+            </Link>
+          </div>
         </div>
 
         <button
@@ -301,6 +342,13 @@ export function HomePage() {
                 Intelligence emerges from relationships between agents, memory, tools, feedback
                 loops, and environments.
               </blockquote>
+              <Link
+                to="/about"
+                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-amber-400/80 transition hover:text-amber-400"
+              >
+                <UserCircle size={15} />
+                Meet the founder → why I built this
+              </Link>
             </div>
           </div>
         </div>
@@ -391,7 +439,54 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* ── Panel 5: Begin + footer ── */}
+      {/* ── Panel 5: Blueprint ── */}
+      <section className="snap-section aurora bg-[var(--color-surface)]">
+        <div className="mx-auto w-full max-w-3xl px-6 py-20">
+          <p data-reveal className="label-caps mb-3 text-center">
+            Leave with something
+          </p>
+          <h2
+            data-reveal
+            style={{ '--reveal-delay': '0.06s' } as React.CSSProperties}
+            className="font-display mx-auto mb-4 max-w-2xl text-center text-3xl font-medium leading-snug text-[var(--color-ink)] md:text-4xl"
+          >
+            Your Emergence Blueprint
+          </h2>
+          <p
+            data-reveal
+            style={{ '--reveal-delay': '0.1s' } as React.CSSProperties}
+            className="mx-auto mb-10 max-w-lg text-center text-[var(--color-slate)]"
+          >
+            Fill this in as you read. When you're done, download a copy — your personal
+            playbook for conducting agents, not just prompting them.
+          </p>
+          <div data-reveal style={{ '--reveal-delay': '0.16s' } as React.CSSProperties}>
+            <EmergenceBlueprint />
+          </div>
+          <div
+            data-reveal
+            style={{ '--reveal-delay': '0.22s' } as React.CSSProperties}
+            className="mt-8 flex flex-wrap items-center justify-center gap-4"
+          >
+            <a
+              href={KIT_LINKS.experienceKit}
+              className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/8 px-5 py-2.5 text-sm font-medium text-amber-700 transition hover:border-amber-500/50 hover:bg-amber-500/12"
+            >
+              <Sparkles size={14} />
+              Experience Kit — go deeper
+            </a>
+            <a
+              href={KIT_LINKS.exoBotKit}
+              className="inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/8 px-5 py-2.5 text-sm font-medium text-violet-700 transition hover:border-violet-500/50 hover:bg-violet-500/12"
+            >
+              <Hammer size={14} />
+              Exo Bot Kit — build your first agent
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Panel 6: Begin + footer ── */}
       <section className="snap-section gradient-hero text-white">
         <div className="pointer-events-none absolute inset-0 grid-dots opacity-30" />
         <EmergenceField density={0.5} speed={0.22} linkDist={130} />
@@ -441,7 +536,10 @@ export function HomePage() {
               <span className="font-display text-white/70">The Age of Emergent Intelligence</span>
               {' · '}ProjectX
             </p>
-            <div className="flex gap-5">
+            <div className="flex flex-wrap justify-center gap-5">
+              <Link to="/about" className="transition hover:text-white/80">
+                About
+              </Link>
               <Link to="/support" className="transition hover:text-white/80">
                 Support
               </Link>
@@ -452,6 +550,12 @@ export function HomePage() {
                 className="transition hover:text-white/80"
               >
                 GitHub
+              </a>
+              <a href={KIT_LINKS.experienceKit} className="transition hover:text-white/80">
+                Experience Kit
+              </a>
+              <a href={KIT_LINKS.exoBotKit} className="transition hover:text-white/80">
+                Exo Bot Kit
               </a>
               <span>25 chapters · free forever</span>
             </div>

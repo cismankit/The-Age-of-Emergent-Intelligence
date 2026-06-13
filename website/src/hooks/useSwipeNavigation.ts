@@ -17,18 +17,8 @@ export function useSwipeNavigation({ onNext, onPrev, enabled = true }: Options) 
   useEffect(() => {
     if (!enabled) return;
 
-    const onKey = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName === 'TEXTAREA' || target.tagName === 'INPUT') return;
-
-      if (e.key === 'ArrowRight' || e.key === ' ') {
-        e.preventDefault();
-        onNextRef.current();
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        onPrevRef.current();
-      }
-    };
+    // Keyboard navigation is handled exclusively by useKeyboardNavigation —
+    // registering it here too caused every keypress to navigate two pages at once.
 
     const onTouchStart = (e: TouchEvent) => {
       touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
@@ -40,18 +30,18 @@ export function useSwipeNavigation({ onNext, onPrev, enabled = true }: Options) 
       const dy = e.changedTouches[0].clientY - touchStart.current.y;
       touchStart.current = null;
 
-      if (Math.abs(dx) < 60 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      // Require a clear horizontal gesture (≥80 px, 2× horizontal dominance)
+      // to avoid accidental page turns during vertical scrolling.
+      if (Math.abs(dx) < 80 || Math.abs(dx) < Math.abs(dy) * 2) return;
 
       if (dx < 0) onNextRef.current();
       else onPrevRef.current();
     };
 
-    window.addEventListener('keydown', onKey);
     window.addEventListener('touchstart', onTouchStart, { passive: true });
     window.addEventListener('touchend', onTouchEnd, { passive: true });
 
     return () => {
-      window.removeEventListener('keydown', onKey);
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchend', onTouchEnd);
     };

@@ -265,6 +265,7 @@ export const chapters: Chapter[] = [
       ],
       application: 'When designing agent ecosystems, ask "will this adapt?" not just "will this work?"',
     },
+    simulation: { type: 'feedback', description: 'Watch an adaptive network rewire itself under environmental pressure — a CAS reorganizing in real time.' },
     keyInsight: 'Complex adaptive systems don\'t break under change—they reorganize. Design for reorganization, not rigidity.',
   },
   {
@@ -426,6 +427,7 @@ export const chapters: Chapter[] = [
       ],
       application: 'Fill out an Agent Definition Card before building any new agent.',
     },
+    simulation: { type: 'agents', description: 'Perceive-reason-act loop: watch an agent close the feedback gap between world state and goal state.' },
     keyInsight: 'An agent is defined by its loop, not its model. Close the loop and agency appears.',
   },
   {
@@ -537,6 +539,7 @@ export const chapters: Chapter[] = [
       ],
       application: 'If an agent describes doing something but never calls a tool, it is hallucinating action.',
     },
+    simulation: { type: 'agents', description: 'Tool call vs. hallucination: see how grounded tool use changes agent accuracy across tasks.' },
     keyInsight: 'Tools ground agents in reality. An agent without tools is a storyteller, not a doer.',
   },
   {
@@ -590,6 +593,7 @@ export const chapters: Chapter[] = [
       ],
       application: 'Never generate a full plan upfront. Plan in horizons. Reality is the planner\'s co-author.',
     },
+    simulation: { type: 'feedback', description: 'Plan-execute-replan loop: watch a multi-step plan adapt as execution reveals new constraints.' },
     keyInsight: 'Planning is not prediction—it is structured improvisation with feedback.',
   },
   {
@@ -643,6 +647,7 @@ export const chapters: Chapter[] = [
       ],
       application: 'Every deliverable agent should have a paired critic. Speed without reflection is technical debt.',
     },
+    simulation: { type: 'feedback', description: 'Generate-critique-revise loop: quality rises through iterative self-evaluation as the agent reflects on its own output.' },
     keyInsight: 'Reflection is how agent systems develop taste—the ability to distinguish good output from merely complete output.',
   },
   {
@@ -696,6 +701,7 @@ export const chapters: Chapter[] = [
       ],
       application: 'Start with human-in-the-loop meta-improvement. Graduate to supervised self-modification.',
     },
+    simulation: { type: 'emergence', description: 'Recursive improvement loop: watch a meta-agent rewrite its own coordination rules as system performance increases.' },
     keyInsight: 'The ultimate emergent property is a system that improves its own capacity to improve.',
   },
 
@@ -913,6 +919,7 @@ export const chapters: Chapter[] = [
       ],
       application: 'Any agent ecosystem with >5 agents needs governance. Start with a constitution.',
     },
+    simulation: { type: 'hierarchy', description: 'Governance rules enforced across agent roles: see how policy constraints flow down a hierarchy and resolve conflicts.' },
     keyInsight: 'Governance is not overhead—it is the infrastructure that makes agent societies trustworthy at scale.',
   },
   {
@@ -1021,6 +1028,7 @@ export const chapters: Chapter[] = [
       ],
       application: 'Treat AI agents as employees, not tools. Job clarity produces output clarity.',
     },
+    simulation: { type: 'agents', description: 'Human-in-the-loop checkpoint: watch decisions escalate to human review when agent confidence falls below threshold.' },
     keyInsight: 'An AI employee is an agent with accountability. Without accountability, it is just automation.',
   },
   {
@@ -1074,6 +1082,7 @@ export const chapters: Chapter[] = [
       ],
       application: 'Co-founder agents are advisors with execution capability. They advise boldly; you decide wisely.',
     },
+    simulation: { type: 'feedback', description: 'Amplification vs. dependency spiral: feedback loops show how human-AI collaboration can enhance or erode human capability over time.' },
     keyInsight: 'The best human-AI partnership is complementary, not competitive. Humans judge; agents analyze.',
   },
   {
@@ -1127,6 +1136,7 @@ export const chapters: Chapter[] = [
       ],
       application: 'AI-native is not "we use AI." It is "our organization is designed for human-agent collaboration."',
     },
+    simulation: { type: 'hierarchy', description: 'Identity and authority chains: trace how delegation and accountability flow through an AI-native organization structure.' },
     keyInsight: 'AI-native organizations don\'t ask "where can we add AI?" They ask "what should humans still do?"',
   },
   {
@@ -1180,6 +1190,7 @@ export const chapters: Chapter[] = [
       ],
       application: 'Think about agent governance now. The agent population is growing faster than our regulatory frameworks.',
     },
+    simulation: { type: 'emergence', description: 'Alignment drift under agent interaction: watch values and behaviors shift in multi-agent systems without explicit governance.' },
     keyInsight: 'We are building a digital civilization without a constitution. That gap will define the next decade.',
   },
 
@@ -1235,6 +1246,7 @@ export const chapters: Chapter[] = [
       ],
       application: 'Start with one agent that saves you 1 hour/week. Grow from proven value, not ambition.',
     },
+    simulation: { type: 'network', description: 'Ecosystem growth graph: watch agent specializations emerge and interconnect as your personal agent network expands.' },
     keyInsight: 'Personal agent ecosystems grow organically. Plant one seed agent and water it with real tasks.',
   },
   {
@@ -1291,6 +1303,7 @@ export const chapters: Chapter[] = [
       ],
       application: 'Assess your current level. Most companies are at Level 1. Level 3 is the competitive threshold.',
     },
+    simulation: { type: 'emergence', description: 'Business OS maturity curve: observe how coordination patterns stabilize as a company-wide agent system reaches steady state.' },
     keyInsight: 'A business OS is the emergent intelligence of your company made operational.',
   },
   {

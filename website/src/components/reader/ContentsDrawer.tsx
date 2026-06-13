@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
-import { X } from 'lucide-react';
+import { X, BookOpen } from 'lucide-react';
 import { chapters } from '../../data/chapters';
 import { parts } from '../../data/parts';
+import { useReadingProgress } from '../../hooks/useReadingProgress';
 
 interface Props {
   open: boolean;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export function ContentsDrawer({ open, onClose, currentChapterId }: Props) {
+  const { progress } = useReadingProgress();
   if (!open) return null;
 
   return (
@@ -45,10 +47,19 @@ export function ContentsDrawer({ open, onClose, currentChapterId }: Props) {
                 <ul className="space-y-0.5">
                   {partChapters.map((ch) => {
                     const isCurrent = ch.id === currentChapterId;
+                    // Resume at saved position if this is the chapter in progress
+                    const isInProgress =
+                      progress &&
+                      progress.chapterId === ch.id &&
+                      progress.pageIndex > 0 &&
+                      !isCurrent;
+                    const targetPage =
+                      progress && progress.chapterId === ch.id ? progress.pageIndex : 0;
+
                     return (
                       <li key={ch.id}>
                         <Link
-                          to={`/chapter/${ch.id}/p/0`}
+                          to={`/chapter/${ch.id}/p/${targetPage}`}
                           onClick={onClose}
                           className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition ${
                             isCurrent
@@ -59,7 +70,14 @@ export function ContentsDrawer({ open, onClose, currentChapterId }: Props) {
                           <span className="font-mono text-xs text-[var(--color-muted)]">
                             {String(ch.id).padStart(2, '0')}
                           </span>
-                          <span className="min-w-0 truncate">{ch.title}</span>
+                          <span className="min-w-0 flex-1 truncate">{ch.title}</span>
+                          {isInProgress && (
+                            <BookOpen
+                              size={12}
+                              className="shrink-0 text-[var(--color-accent)]"
+                              aria-label="In progress"
+                            />
+                          )}
                         </Link>
                       </li>
                     );
