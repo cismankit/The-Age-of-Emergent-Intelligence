@@ -5,18 +5,18 @@ import { ProofModule } from '../components/ProofModule';
 import { getProofForKit } from '../data/proof';
 
 // ── Social links ────────────────────────────────────────────────────
-// [CUSTOMIZE] Replace these with real URLs
 const SOCIAL = {
   github: 'https://github.com/cismankit',
-  twitter: '#twitter', // [CUSTOMIZE]
-  linkedin: '#linkedin', // [CUSTOMIZE]
-  website: '#website', // [CUSTOMIZE]
+  linkedin: 'https://www.linkedin.com/in/ankit-yadav-ji/',
 };
+
+// To use a custom photo: add website/public/founder.jpg and set PHOTO_URL to '/founder.jpg'
+const PHOTO_URL = 'https://github.com/cismankit.png';
 
 // [CUSTOMIZE] Replace with real product URLs when launched
 const KIT_LINKS = {
-  experienceKit: '#experience-kit',
-  exoBotKit: '#exo-bot-kit',
+  experienceKit: '/kits/experience',
+  exoBotKit: '/kits/exo-bot',
 };
 
 export function AboutPage() {
@@ -28,22 +28,34 @@ export function AboutPage() {
         <EmergenceField density={0.3} speed={0.18} linkDist={110} />
 
         <div className="relative mx-auto max-w-4xl px-6 py-28 text-center">
-          {/* Avatar placeholder */}
-          <div className="mx-auto mb-8 h-24 w-24 overflow-hidden rounded-full border-2 border-amber-400/40 bg-gradient-to-br from-amber-500/20 to-violet-500/20 shadow-2xl">
-            {/* [CUSTOMIZE] Replace with <img src="/your-photo.jpg" alt="Founder" className="h-full w-full object-cover" /> */}
-            <div className="flex h-full w-full items-center justify-center text-4xl font-display font-medium text-amber-400/80">
-              P
+        {/* Avatar */}
+          <div className="mx-auto mb-8 h-24 w-24 overflow-hidden rounded-full border-2 border-amber-400/40 shadow-2xl">
+            <img
+              src={PHOTO_URL}
+              alt="Ankit Yadav — founder of ProjectX"
+              className="h-full w-full object-cover"
+              onError={(e) => {
+                const target = e.currentTarget as HTMLImageElement;
+                target.style.display = 'none';
+                const fallback = target.nextElementSibling as HTMLElement | null;
+                if (fallback) fallback.style.display = 'flex';
+              }}
+            />
+            <div
+              style={{ display: 'none' }}
+              className="h-full w-full items-center justify-center bg-gradient-to-br from-amber-500/20 to-violet-500/20 text-4xl font-display font-medium text-amber-400/80"
+            >
+              A
             </div>
           </div>
 
           <p className="label-caps mb-4 text-white/40">The person behind Emergence</p>
           <h1 className="font-display text-4xl font-medium leading-tight md:text-6xl">
-            {/* [CUSTOMIZE] Replace with your name */}
-            The Founder of ProjectX
+            Ankit Yadav
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-lg text-white/60">
-            {/* [CUSTOMIZE] Replace with your one-line tagline */}
-            Builder, systems thinker, obsessed with what happens when minds cooperate.
+            Security practitioner turned AI systems builder — obsessed with what happens when
+            many minds cooperate.
           </p>
 
           {/* Social links */}
@@ -58,14 +70,13 @@ export function AboutPage() {
               GitHub
             </a>
             <a
-              href={SOCIAL.twitter}
+              href={SOCIAL.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2 text-sm text-white/70 transition hover:border-white/40 hover:bg-white/5 hover:text-white"
             >
               <ExternalLink size={15} />
-              {/* [CUSTOMIZE] Change label to X / Twitter */}
-              @handle
+              LinkedIn
             </a>
           </div>
         </div>
@@ -75,9 +86,8 @@ export function AboutPage() {
       <section className="mx-auto max-w-2xl px-6 py-20">
         <p className="label-caps mb-6">Why I built this</p>
 
-        <div className="space-y-6 text-[1.0625rem] leading-[1.85] text-[var(--color-ink)]">
+      <div className="space-y-6 text-[1.0625rem] leading-[1.85] text-[var(--color-ink)]">
           <p className="first-para">
-            {/* [CUSTOMIZE] Replace with your real story — this is a warmly-voiced placeholder */}
             I kept watching the same thing happen. Someone would discover ChatGPT, or Claude, or
             Gemini — and their first instinct was to write a better prompt. To coax the single
             oracle into giving a better answer. To treat one AI like a smarter Google.
@@ -98,6 +108,15 @@ export function AboutPage() {
           </p>
 
           <p>
+            I come from a security background — CISM certified, years in enterprise risk at EY,
+            learning to think about systems that fail in unexpected ways. That training turned out
+            to be the perfect lens for multi-agent AI: complex systems break not at their strongest
+            node but at the weakest handoff. The gap between what agents <em>intend</em> and what
+            they actually do under pressure. I recognized the failure modes immediately, because I'd
+            spent years mapping them in a different domain.
+          </p>
+
+          <p>
             So I built Emergence. An illustrated field guide. Part book, part lab, part argument
             for a new kind of literacy. Twenty-five chapters that start with one AI hitting a wall
             and end with you knowing how to architect a mind from many.
@@ -108,14 +127,13 @@ export function AboutPage() {
           </blockquote>
 
           <p>
-            I am not an academic. I'm a builder. I've shipped products, run teams, watched AI go
-            from novelty to infrastructure in real time. This guide is what I wish existed when I
-            was trying to understand why my multi-agent experiments kept failing — and what made
-            them work when they finally did.
+            I am not an academic. I'm a builder. I've shipped products, navigated enterprise
+            systems, watched AI go from novelty to infrastructure in real time. This guide is what
+            I wish existed when I was trying to understand why my multi-agent experiments kept
+            failing — and what made them work when they finally did.
           </p>
 
           <p>
-            {/* [CUSTOMIZE] Personalize this paragraph with your background */}
             ProjectX started as a side project and became something I couldn't stop building.
             Because the more I taught it, the more I realized: this is the curriculum for the next
             decade. Not prompting. <em>Conducting.</em>

@@ -41,7 +41,7 @@ External critiques that compare us to HappyRobot, GetBOB, etc. apply a **categor
 ### Lane 1 — Founder decisions
 | Item | Done when |
 |---|---|
-| Customize `/about` bio, photo, social links | Real name, photo, and working links live on site |
+| ~~Customize `/about` bio, photo, social links~~ ✅ | Real name (Ankit Yadav), GitHub avatar, LinkedIn live on site |
 | Google Search Console | `site:robotbod.ai` returns homepage (founder verifies) |
 | Kit URLs & email backend | ConvertKit/Beehiiv wired; kit pages capture to backend |
 | Real proof metrics | At least one metric or testimonial with `available: true` in `proof.ts` |
@@ -100,6 +100,9 @@ Priority: make the guide feel made by a *person*, not a system.
 - [x] **SEO package** — `robots.txt`, `sitemap.xml`, canonical + JSON-LD Book schema
 - [x] **ProofModule** — config-driven social proof with honest empty state
 - [x] **Kit email waitlist** — working localStorage email capture on both kit pages
+- [x] **Founder profile** — Ankit Yadav, GitHub avatar (`https://github.com/cismankit.png`), LinkedIn; bio with CISM/EY/security background; kit links updated to real routes
+- [x] **Chapter intro hints** — `ChapterIntroHint` for chapters 2, 3, 25 (Part I + finale); reusable themed two-panel interactive widget
+- [x] **Author attribution** — Ankit Yadav in homepage footer and Layout footer
 
 ### Phase 2 — Cinematic Simulations (Q3 2026)
 Priority: move from procedural placeholders to art-directed scenes.
@@ -172,11 +175,12 @@ The following are intentionally deferred until reader volume justifies the infra
 
 ## What the Founder Must Customize
 
-- [ ] Replace `[CUSTOMIZE]` in `/about` page with real bio, photo URL, social links
+- [x] ~~Replace `[CUSTOMIZE]` in `/about` page with real bio, photo URL, social links~~ — **Done: Ankit Yadav, GitHub avatar, LinkedIn**
 - [ ] Add real Experience Kit URL when product launches
 - [ ] Add real Exo Bot Kit URL when product launches
 - [ ] Set up email list backend (Resend / ConvertKit / Beehiiv) — kit pages are ready to accept form submissions; replace `localStorage` with a real API call in `KitComingSoonPage.tsx`'s `WaitlistForm`
 - [ ] Add Discord / community link once community exists
+- [ ] To use a custom photo: add `website/public/founder.jpg` and change `PHOTO_URL` in `AboutPage.tsx` to `'/founder.jpg'`
 
 ---
 

@@ -342,12 +342,9 @@ export function HomePage() {
                 Intelligence emerges from relationships between agents, memory, tools, feedback
                 loops, and environments.
               </blockquote>
-              <Link
-                to="/about"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-amber-400/80 transition hover:text-amber-400"
-              >
+              <Link to="/about" className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-amber-400/80 transition hover:text-amber-400">
                 <UserCircle size={15} />
-                Meet the founder → why I built this
+                Meet Ankit — why he built this →
               </Link>
             </div>
           </div>
@@ -532,8 +529,15 @@ export function HomePage() {
 
         <footer className="relative border-t border-white/10 px-6 py-6">
           <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-3 text-center text-sm text-white/40 md:flex-row md:text-left">
-            <p>
+          <p>
               <span className="font-display text-white/70">The Age of Emergent Intelligence</span>
+              {' · '}by{' '}
+              <a
+                href="/about"
+                className="text-white/60 transition hover:text-white/90"
+              >
+                Ankit Yadav
+              </a>
               {' · '}ProjectX
             </p>
             <div className="flex flex-wrap justify-center gap-5">

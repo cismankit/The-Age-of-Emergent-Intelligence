@@ -55,7 +55,11 @@ export function Layout() {
               The Age of Emergent Intelligence
             </p>
             <p className="mt-1 text-sm text-[var(--color-muted)]">
-              A visual field guide to multi-agent AI · ProjectX
+              A visual field guide to multi-agent AI ·{' '}
+              <Link to="/about" className="transition hover:text-[var(--color-ink)]">
+                Ankit Yadav
+              </Link>
+              {' '}· ProjectX
             </p>
           </div>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-[var(--color-slate)]">

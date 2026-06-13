@@ -14,6 +14,7 @@ import { FrameworkCard } from '../FrameworkCard';
 import { ReflectionQuestions } from '../ReflectionQuestions';
 import { ReflectionPrompts } from '../ReflectionPrompts';
 import { AgentCompareIntro } from '../AgentCompareIntro';
+import { ChapterIntroHint } from '../ChapterIntroHint';
 
 // Lazy-load simulation panel to defer its large canvas bundle
 const SimulationPanel = lazy(() =>
@@ -86,6 +87,13 @@ const OpeningSection = forwardRef<HTMLElement, { chapter: Chapter }>(({ chapter 
       {chapter.id === 1 && (
         <div className="max-w-3xl mx-auto px-6 pt-8">
           <AgentCompareIntro />
+        </div>
+      )}
+
+      {/* Chapters 2, 3, 25: themed intro hint */}
+      {[2, 3, 25].includes(chapter.id) && (
+        <div className="max-w-3xl mx-auto px-6 pt-8">
+          <ChapterIntroHint chapterId={chapter.id} partNumber={chapter.partNumber} />
         </div>
       )}
 
